@@ -7,58 +7,62 @@ import Subscription from './Subscription.js';
 import Profile from './Profile.js';
 import StockChart from './StockChart.js';
 
-const subImg = require('./../Resources/Images/test.png');
-const profImg = require('./../Resources/Images/test.png');
-const chartImg = require('./../Resources/Images/test.png');
+const subImg = require('./../Resources/Images/services.png');
+const profImg = require('./../Resources/Images/user.png');
+const chartImg = require('./../Resources/Images/chart.png');
 
-const HomeNavi = TabNavigator({
-    sub: {
-        screen: Subscription,
-        navigationOptions: {
-            tabBarLabel: 'Subscription',
-            tabBarIcon: () => <Image source={subImg} />
+export const StackNavi = StackNavigator({
+    Login: {
+        screen: Login,
+        navigationOptions: ({ navigation }) => ({
+            header: null,
+          }),
+    },
+    HomeNavi: {
+        screen: TabNavigator({
+            sub: {
+                screen: Subscription,
+                navigationOptions: {
+                tabBarIcon: ({ focused }) => (
+                    focused ?
+                    <Image source={subImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
+                    :
+                    <Image source={subImg} style={{ width: 25, height: 25 }} />)
+                },
+            },
+            chart: {
+                screen: StockChart,
+                navigationOptions: {
+                    tabBarIcon: ({ focused }) => (
+                        focused ?
+                        <Image source={chartImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
+                        :
+                        <Image source={chartImg} style={{ width: 25, height: 25 }} />)
+                },
+            },
+            profile: {
+                screen: Profile,
+                navigationOptions: {
+                    tabBarIcon: ({ focused }) => (
+                        focused ?
+                        <Image source={profImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
+                        :
+                        <Image source={profImg} style={{ width: 25, height: 25 }} />)
+                },
+            },
+      }, {
+      tabBarPosition: 'bottom',
+      tabBarOptions: {
+        header: null,
+        showIcon: true,
+        showLabel: false,
+        style: {
+          height: 50,
+          backgroundColor: '#B71C1C'
         },
-    },
-    chart: {
-        screen: StockChart,
-        navigationOptions: {
-            tabBarLabel: 'Chart',
-            tabBarIcon: () => <Image source={chartImg} />
-        },
-    },
-    profile: {
-        screen: Profile,
-        navigationOptions: {
-            tabBarLabel: 'Profile',
-            tabBarIcon: () => <Image source={profImg} />
-        },
-    },
-  }, {
-  tabBarPosition: 'bottom',
-  tabBarOptions: {
-    showIcon: true,
-    style: {
-      backgroundColor: '#005b96'
-    },
-    iconStyle: {
-      height: 64,
-      width: 64
-    },
-    activeTintColor: '#eae965'
-  },
-});
+        activeTintColor: '#eae965'
+      },
 
-const Root = StackNavigator({
-    login: {
-      screen: Login
-    },
-    homeNavi: {
-      screen: HomeNavi
-    }
-  },
-  {
-    headerMode: 'none'
+    })
   }
-);
-
-export default Root;
+});
