@@ -47,3 +47,18 @@ const HomeNavi = TabNavigator({
     activeTintColor: '#eae965'
   },
 });
+
+const Root = StackNavigator({
+    login: {
+      screen: Login
+    },
+    homeNavi: {
+      screen: HomeNavi
+    }
+  },
+  {
+    headerMode: 'none'
+  }
+);
+
+export default Root;
