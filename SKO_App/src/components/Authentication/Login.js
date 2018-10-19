@@ -12,11 +12,9 @@ export default class Login extends Component{
         <TouchableWithoutFeedback style={{flex: 1,backgroundColor: '#4857cb',flexDirection: 'column',}} 
                 onPress={Keyboard.dismiss}>
             <View style={{justifyContent: 'center',flex: 1}}>
-                <View style={{alignItems: 'center',justifyContent: 'center',flex: 1}}>
-                    <Image style={{width:300, height:300}}
+                    <Image style={{width:300, height:300, alignSelf:'center'}}
                         source={require('../../Resources/Images/applogo.png')}>
                     </Image>
-                </View>
                 <View style={{flex:1}}> 
                 <View style={{alignItems:'center'}}>
                     <TextInput style={{ width:'80%',
