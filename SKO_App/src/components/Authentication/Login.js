@@ -41,11 +41,13 @@ export default class Login extends Component{
                         autoCorrect={false}
                         ref={"txtPassword"}
                     />
-                    
-                </View>
-                <TouchableOpacity style={{backgroundColor: '#f7c744',paddingVertical: 15, width:'80%', alignSelf:'center'}}>
+
+
+                <TouchableOpacity style={{backgroundColor: '#f7c744', width:'80%', height:50, justifyContent:'center'}}>
                         <Text style={{textAlign: 'center',color :'#000',fontWeight: 'bold',fontSize: 18}}>SIGN IN</Text>
                 </TouchableOpacity>
+                    
+                </View>
                 </View>
             </View>
         </TouchableWithoutFeedback>
