@@ -1,0 +1,3 @@
+rootProject.name = 'SKO_App'
+
+include ':app'
