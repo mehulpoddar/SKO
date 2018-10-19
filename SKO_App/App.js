@@ -9,6 +9,7 @@
 import React, {Component} from 'react';
 import {View} from 'react-native';
 import Login from './src/components/Authentication/Login';
+import firebase from 'firebase';
 
 export default class App extends Component{
   render() {
