@@ -3,6 +3,7 @@ import { Image } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
 
 import Login from './Authentication/Login.js';
+import SignUpForm from './Authentication/SignUpForm';
 import Subscription from './Subscription.js';
 import Profile from './Profile.js';
 import StockChart from './StockChart.js';
@@ -14,6 +15,12 @@ const chartImg = require('./../Resources/Images/chart.png');
 export const StackNavi = StackNavigator({
     Login: {
         screen: Login,
+        navigationOptions: ({ navigation }) => ({
+            header: null,
+          }),
+    },
+    SignUpForm: {
+        screen: SignUpForm,
         navigationOptions: ({ navigation }) => ({
             header: null,
           }),
@@ -51,6 +58,7 @@ export const StackNavi = StackNavigator({
                 },
             },
       }, {
+      initialRouteName: 'chart',
       tabBarPosition: 'bottom',
       tabBarOptions: {
         header: null,
@@ -101,7 +109,7 @@ export const TabNavi = TabNavigator({
         },
     },
   }, {
-
+  initialRouteName: 'chart',
   tabBarPosition: 'bottom',
   tabBarOptions: {
     header: null,
