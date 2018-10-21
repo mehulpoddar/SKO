@@ -31,30 +31,30 @@ export const StackNavi = StackNavigator({
                 screen: Subscription,
                 navigationOptions: {
                 tabBarIcon: ({ focused }) => (
-                    focused ? 
-                    <Image source={subImg} style={{width:35, height:35, tintColor:'#fff'}} /> 
-                    : 
-                    <Image source={subImg} style={{width:25, height:25}} />)
+                    focused ?
+                    <Image source={subImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
+                    :
+                    <Image source={subImg} style={{ width: 25, height: 25 }} />)
                 },
             },
             chart: {
                 screen: StockChart,
                 navigationOptions: {
                     tabBarIcon: ({ focused }) => (
-                        focused ? 
-                        <Image source={chartImg} style={{width:35, height:35, tintColor:'#fff'}} /> 
-                        : 
-                        <Image source={chartImg} style={{width:25, height:25}} />)
+                        focused ?
+                        <Image source={chartImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
+                        :
+                        <Image source={chartImg} style={{ width: 25, height: 25 }} />)
                 },
             },
             profile: {
                 screen: Profile,
                 navigationOptions: {
                     tabBarIcon: ({ focused }) => (
-                        focused ? 
-                        <Image source={profImg} style={{width:35, height:35, tintColor:'#fff'}} /> 
-                        : 
-                        <Image source={profImg} style={{width:25, height:25}} />)
+                        focused ?
+                        <Image source={profImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
+                        :
+                        <Image source={profImg} style={{ width: 25, height: 25 }} />)
                 },
             },
       }, {
@@ -65,17 +65,15 @@ export const StackNavi = StackNavigator({
         showIcon: true,
         showLabel: false,
         style: {
-          height:50,
+          height: 50,
           backgroundColor: '#B71C1C'
         },
         activeTintColor: '#eae965'
       },
-      
+
     })
-}
-
+  }
 });
-
 
 export const TabNavi = TabNavigator({
     sub: {
