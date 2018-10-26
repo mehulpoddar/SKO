@@ -10,20 +10,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 export default class Login extends Component{
     state={email:'', password:''}
 
-    firebaseSignUp() {
-        const email = this.state.email
-        const password = this.state.password
-        const { navigate } = this.props.navigation;
-
-        firebase.auth().createUserWithEmailAndPassword(email,password).then(
-            ()=>{
-                this.props.navigation.navigate('HomeNavi', {screen:'StockChart'})
-            }
-        )
-        .catch(() => {
-            ToastAndroid.show('Invalid Credentials', ToastAndroid.SHORT);
-          })
-    }
+    
 
     firebaseSignIn() {
         const email = this.state.email
