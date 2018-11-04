@@ -3,11 +3,14 @@ package com.sko_app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.janeasystems.rn_nodejs_mobile.RNNodeJsMobilePackage;
+import com.github.wuxudong.rncharts.MPAndroidChartPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+
+import com.facebook.react.bridge.ReadableNativeArray;
+import com.facebook.react.bridge.ReadableNativeMap;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNNodeJsMobilePackage()
+            new MPAndroidChartPackage()
       );
     }
 
@@ -43,5 +46,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    ReadableNativeArray.setUseNativeAccessor(true);
+    ReadableNativeMap.setUseNativeAccessor(true);
   }
 }
