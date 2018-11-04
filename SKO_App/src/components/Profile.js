@@ -7,18 +7,21 @@ export default class Profile extends Component {
         headerMode: 'none'
       }
 
-    state={email:'', name:'', experience:'', returns:''}
+    state={email:'', name:'', experience:'', returns:'',
+    conv_experience: { 0: '10,000 - 50,000', 1: '50,000 - 1,00,000', 2: '1 lakh to 3 lakhs', 3: 'More than 3 lakhs' },
+    conv_returns: { 0: 'No Experience', 1: '1 - 6 months', 2: '7 - 11 months', 3: '1 - 3 years', 4: '4 - 8 years', 5: 'More than 8' } }
+
+    componentDidMount()
+    {
+        firebase.database().ref(`users/${firebase.auth().currentUser.uid}/`).on('value',(user)=>{
+            this.setState({email: user.val().email, name: user.val().username, experience: this.state.conv_experience[user.val().experience], returns: this.state.conv_returns[user.val().returns] });
+        }) 
+    }
 
     firebaseSignOut() {
         firebase.auth().signOut();
     }
 
-    componentDidMount()
-    {
-        firebase.database().ref(`users/${firebase.auth().currentUser.uid}/`).on('value',(user)=>{
-            this.setState({email: user.val().email, name: user.val().username, experience: user.val().experience, returns: user.val().returns });
-        }) 
-    }
     render() {
         return (
             <View style={{flex:1}}>
