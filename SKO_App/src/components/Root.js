@@ -3,6 +3,7 @@ import { Image } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
 
 import Login from './Authentication/Login.js';
+import SignUpForm from './Authentication/SignUpForm';
 import Subscription from './Subscription.js';
 import Profile from './Profile.js';
 import StockChart from './StockChart.js';
@@ -60,7 +61,14 @@ export const StackNavi = StackNavigator({
     Login: {
         screen: Login
     },
+    SignUpForm: {
+        screen: SignUpForm,
+        navigationOptions: ({ navigation }) => ({
+            header: null,
+          }),
+    },
     HomeNavi: {
+<<<<<<< HEAD
         screen: HomeNavi
     }
   },
@@ -68,3 +76,99 @@ export const StackNavi = StackNavigator({
     headerMode: 'none'
   }
 );
+=======
+        screen: TabNavigator({
+            sub: {
+                screen: Subscription,
+                navigationOptions: {
+                tabBarIcon: ({ focused }) => (
+                    focused ?
+                    <Image source={subImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
+                    :
+                    <Image source={subImg} style={{ width: 25, height: 25 }} />)
+                },
+            },
+            chart: {
+                screen: StockChart,
+                navigationOptions: {
+                    tabBarIcon: ({ focused }) => (
+                        focused ?
+                        <Image source={chartImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
+                        :
+                        <Image source={chartImg} style={{ width: 25, height: 25 }} />)
+                },
+            },
+            profile: {
+                screen: Profile,
+                navigationOptions: {
+                    tabBarIcon: ({ focused }) => (
+                        focused ?
+                        <Image source={profImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
+                        :
+                        <Image source={profImg} style={{ width: 25, height: 25 }} />)
+                },
+            },
+      }, {
+      initialRouteName: 'chart',
+      tabBarPosition: 'bottom',
+      tabBarOptions: {
+        header: null,
+        showIcon: true,
+        showLabel: false,
+        style: {
+          height: 50,
+          backgroundColor: '#B71C1C'
+        },
+        activeTintColor: '#eae965'
+      },
+
+    })
+  }
+});
+
+export const TabNavi = TabNavigator({
+    sub: {
+        screen: Subscription,
+        navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+            focused ? 
+            <Image source={subImg} style={{width:35, height:35, tintColor:'#fff'}} /> 
+            : 
+            <Image source={subImg} style={{width:25, height:25}} />)
+        },
+    },
+    chart: {
+        screen: StockChart,
+        navigationOptions: {
+            tabBarIcon: ({ focused }) => (
+                focused ? 
+                <Image source={chartImg} style={{width:35, height:35, tintColor:'#fff'}} /> 
+                : 
+                <Image source={chartImg} style={{width:25, height:25}} />)
+        },
+    },
+    profile: {
+        screen: Profile,
+        navigationOptions: {
+            tabBarIcon: ({ focused }) => (
+                focused ? 
+                <Image source={profImg} style={{width:35, height:35, tintColor:'#fff'}} /> 
+                : 
+                <Image source={profImg} style={{width:25, height:25}} />)
+        },
+    },
+  }, {
+  initialRouteName: 'chart',
+  tabBarPosition: 'bottom',
+  tabBarOptions: {
+    header: null,
+    showIcon: true,
+    showLabel: false,
+    style: {
+        height:50,
+      backgroundColor: '#B71C1C'
+    },
+  },
+  
+}); 
+>>>>>>> 6411fb8ec5f5e54d9e827a4c68a7967ac8df82fe
