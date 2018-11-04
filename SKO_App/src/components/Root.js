@@ -68,15 +68,6 @@ export const StackNavi = StackNavigator({
           }),
     },
     HomeNavi: {
-<<<<<<< HEAD
-        screen: HomeNavi
-    }
-  },
-  {
-    headerMode: 'none'
-  }
-);
-=======
         screen: TabNavigator({
             sub: {
                 screen: Subscription,
@@ -131,9 +122,9 @@ export const TabNavi = TabNavigator({
         screen: Subscription,
         navigationOptions: {
         tabBarIcon: ({ focused }) => (
-            focused ? 
-            <Image source={subImg} style={{width:35, height:35, tintColor:'#fff'}} /> 
-            : 
+            focused ?
+            <Image source={subImg} style={{width:35, height:35, tintColor:'#fff'}} />
+            :
             <Image source={subImg} style={{width:25, height:25}} />)
         },
     },
@@ -142,8 +133,8 @@ export const TabNavi = TabNavigator({
         navigationOptions: {
             tabBarIcon: ({ focused }) => (
                 focused ? 
-                <Image source={chartImg} style={{width:35, height:35, tintColor:'#fff'}} /> 
-                : 
+                <Image source={chartImg} style={{width:35, height:35, tintColor:'#fff'}} />
+                :
                 <Image source={chartImg} style={{width:25, height:25}} />)
         },
     },
@@ -151,9 +142,9 @@ export const TabNavi = TabNavigator({
         screen: Profile,
         navigationOptions: {
             tabBarIcon: ({ focused }) => (
-                focused ? 
-                <Image source={profImg} style={{width:35, height:35, tintColor:'#fff'}} /> 
-                : 
+                focused ?
+                <Image source={profImg} style={{width:35, height:35, tintColor:'#fff'}} />
+                :
                 <Image source={profImg} style={{width:25, height:25}} />)
         },
     },
@@ -169,6 +160,5 @@ export const TabNavi = TabNavigator({
       backgroundColor: '#B71C1C'
     },
   },
-  
-}); 
->>>>>>> 6411fb8ec5f5e54d9e827a4c68a7967ac8df82fe
+
+});
