@@ -68,15 +68,6 @@ export const StackNavi = StackNavigator({
           }),
     },
     HomeNavi: {
-<<<<<<< HEAD
-        screen: HomeNavi
-    }
-  },
-  {
-    headerMode: 'none'
-  }
-);
-=======
         screen: TabNavigator({
             sub: {
                 screen: Subscription,
@@ -171,4 +162,3 @@ export const TabNavi = TabNavigator({
   },
   
 }); 
->>>>>>> 6411fb8ec5f5e54d9e827a4c68a7967ac8df82fe
