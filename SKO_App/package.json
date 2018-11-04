@@ -9,11 +9,8 @@
   "dependencies": {
     "@babel/runtime": "^7.1.2",
     "firebase": "4.9.1",
-<<<<<<< HEAD
     "nodejs-mobile-react-native": "^0.3.0",
-=======
     "googleapis": "^27.0.0",
->>>>>>> 8ecbbd374bb0303a55f4cbfd8d0d94946717663e
     "react": "16.6.0-alpha.8af6728",
     "react-native": "0.57.3",
     "react-native-charts-wrapper": "^0.5.0",
