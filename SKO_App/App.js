@@ -13,6 +13,7 @@ import firebase from 'firebase';
 import Login from './src/components/Authentication/Login';
 import {StackNavi, TabNavi} from './src/components/Root';
 import Splash from './src/components/Authentication/Splash';
+import Sub from './src/components/Subscription';
 
 export default class App extends Component{
 
@@ -50,8 +51,8 @@ export default class App extends Component{
         return <Splash />;
       case true:
         return <TabNavi />;
-      case false: 
-        return <StackNavi />;
+      case false:
+        return <Sub />;
     }
   }
   render() {
