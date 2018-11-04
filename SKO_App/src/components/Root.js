@@ -11,58 +11,60 @@ const subImg = require('./../Resources/Images/services.png');
 const profImg = require('./../Resources/Images/user.png');
 const chartImg = require('./../Resources/Images/chart.png');
 
+const HomeNavi = TabNavigator({
+    sub: {
+        screen: Subscription,
+        navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+            focused ?
+            <Image source={subImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
+            :
+            <Image source={subImg} style={{ width: 25, height: 25 }} />)
+        },
+    },
+    chart: {
+        screen: StockChart,
+        navigationOptions: {
+            tabBarIcon: ({ focused }) => (
+                focused ?
+                <Image source={chartImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
+                :
+                <Image source={chartImg} style={{ width: 25, height: 25 }} />)
+        },
+    },
+    profile: {
+        screen: Profile,
+        navigationOptions: {
+            tabBarIcon: ({ focused }) => (
+                focused ?
+                <Image source={profImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
+                :
+                <Image source={profImg} style={{ width: 25, height: 25 }} />)
+        },
+    },
+  }, {
+    tabBarPosition: 'bottom',
+    tabBarOptions: {
+      header: null,
+      showIcon: true,
+      showLabel: false,
+      style: {
+        height: 50,
+        backgroundColor: '#B71C1C'
+    },
+      activeTintColor: '#eae965'
+  },
+});
+
 export const StackNavi = StackNavigator({
     Login: {
-        screen: Login,
-        navigationOptions: ({ navigation }) => ({
-            header: null,
-          }),
+        screen: Login
     },
     HomeNavi: {
-        screen: TabNavigator({
-            sub: {
-                screen: Subscription,
-                navigationOptions: {
-                tabBarIcon: ({ focused }) => (
-                    focused ?
-                    <Image source={subImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
-                    :
-                    <Image source={subImg} style={{ width: 25, height: 25 }} />)
-                },
-            },
-            chart: {
-                screen: StockChart,
-                navigationOptions: {
-                    tabBarIcon: ({ focused }) => (
-                        focused ?
-                        <Image source={chartImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
-                        :
-                        <Image source={chartImg} style={{ width: 25, height: 25 }} />)
-                },
-            },
-            profile: {
-                screen: Profile,
-                navigationOptions: {
-                    tabBarIcon: ({ focused }) => (
-                        focused ?
-                        <Image source={profImg} style={{ width: 35, height: 35, tintColor: '#fff' }} />
-                        :
-                        <Image source={profImg} style={{ width: 25, height: 25 }} />)
-                },
-            },
-      }, {
-      tabBarPosition: 'bottom',
-      tabBarOptions: {
-        header: null,
-        showIcon: true,
-        showLabel: false,
-        style: {
-          height: 50,
-          backgroundColor: '#B71C1C'
-        },
-        activeTintColor: '#eae965'
-      },
-
-    })
+        screen: HomeNavi
+    }
+  },
+  {
+    headerMode: 'none'
   }
-});
+);
