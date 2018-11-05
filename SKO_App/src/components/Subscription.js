@@ -10,7 +10,7 @@ export default class Subscription extends Component {
     render() {
         return (
             <View>
-                <Text>'Subscription'</Text>
+                <Text>'Subscrption'</Text>
             </View>
         );
     }
