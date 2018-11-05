@@ -52,7 +52,7 @@ export default class App extends Component{
       case true:
         return <TabNavi />;
       case false:
-        return <Sub />;
+        return <StackNavi />;
     }
   }
   render() {

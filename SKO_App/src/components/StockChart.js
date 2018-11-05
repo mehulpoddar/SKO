@@ -5,11 +5,30 @@ import { AppRegistry,
     View, processColor} from 'react-native';
 import { CandleStickChart } from 'react-native-charts-wrapper';
 
-
 export default class StockChart extends Component {
     static navigationOptions = {
         headerMode: 'none'
       }
+
+
+      
+
+    componentDidMount(){
+      console.log("Hello")
+      this.getData();
+    }
+
+    async getData(){
+      let response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1lbK_NC7BTYkNwh--jiUZ8-ETzZMNzqiAuKfv3OMUOwU/values/Sheet1?key=AIzaSyCoxSCbr5KNjS5xmezt09O0PLP3k8aaxGg', {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      }
+      , );
+      let responseJson = await response.json();
+      console.log("Hey",responseJson)
+    }
 
     render() {
         
@@ -31,7 +50,7 @@ export default class StockChart extends Component {
                     },
                     {
                         x: 30,
-                        shadowH: 200, // required
+                        shadowH: 800, // required
                         shadowL: 40, // required
                         open: 150, // required
                         close: 100, // required
@@ -44,7 +63,7 @@ export default class StockChart extends Component {
                         close: 200, // required
                       }
                   ],
-                  label: 'Stocks', // required
+                  label: 'Stocksss', // required
                   config: {
                     highlightColor: processColor('darkgray'),
                     shadowColor: processColor('black'),
@@ -52,7 +71,7 @@ export default class StockChart extends Component {
                     shadowColorSameAsCandle: true,
                     neutralColor: processColor('pink'),
                     increasingColor: processColor('#71BD6A'),
-                    increasingPaintStyle: 'fill',
+                    increasingPaintStyle: 'FILL',
                     decreasingColor: processColor('#D14B5A')
                   }
                 }]
@@ -64,7 +83,6 @@ export default class StockChart extends Component {
       </View>
         );
     }
-
 }
 
 const styles = StyleSheet.create({
