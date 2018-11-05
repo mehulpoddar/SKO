@@ -10,31 +10,9 @@ export default class StockChart extends Component {
         headerMode: 'none'
       }
 
-    state = {chartdata:[
-      {
-        x: 20,
-        shadowH: 120, // required
-        shadowL: 2, // required
-        open: 50, // required
-        close: 100, // required
-      },
-      {
-          x: 30,
-          shadowH: 800, // required
-          shadowL: 40, // required
-          open: 150, // required
-          close: 100, // required
-        },
-        {
-          x: 40,
-          shadowH: 300, // required
-          shadowL: 0, // required
-          open: 50, // required
-          close: 200, // required
-        }
-    ]}
+    state = {chartdata:[]}
 
-      
+
 
     componentDidMount(){
       console.log("Hello")
@@ -51,7 +29,7 @@ export default class StockChart extends Component {
       , );
       let responseJson = await response.json();
       this.setState({chartdata: this.formatjson(responseJson)})
-      
+
 
     }
 
@@ -70,11 +48,11 @@ export default class StockChart extends Component {
     }
 
     render() {
-        
+
         return (
             <View style={{flex: 1}}>
         <View style={styles.container}>
-          <CandleStickChart style={styles.chart} 
+          <CandleStickChart style={styles.chart}
             chartBackgroundColor={2}
             data= {{
             dataSets: [
@@ -111,4 +89,3 @@ const styles = StyleSheet.create({
       flex: 1
     }
   });
-  
