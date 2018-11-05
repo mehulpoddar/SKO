@@ -10,6 +10,29 @@ export default class StockChart extends Component {
         headerMode: 'none'
       }
 
+    state = {chartdata:[
+      {
+        x: 20,
+        shadowH: 120, // required
+        shadowL: 2, // required
+        open: 50, // required
+        close: 100, // required
+      },
+      {
+          x: 30,
+          shadowH: 800, // required
+          shadowL: 40, // required
+          open: 150, // required
+          close: 100, // required
+        },
+        {
+          x: 40,
+          shadowH: 300, // required
+          shadowL: 0, // required
+          open: 50, // required
+          close: 200, // required
+        }
+    ]}
 
       
 
@@ -27,7 +50,23 @@ export default class StockChart extends Component {
       }
       , );
       let responseJson = await response.json();
-      console.log("Hey",responseJson)
+      this.setState({chartdata: this.formatjson(responseJson)})
+      
+
+    }
+
+    formatjson(responseJson){
+      let valuesarray = responseJson.values
+      valuesarray = valuesarray.slice(1)
+      var values = []
+      valuesarray.forEach(
+        val=>{
+          console.log(val)
+          values.push({ x:parseInt(val[0]), shadowH:parseFloat(val[1]), shadowL:parseFloat(val[2]), open:parseFloat(val[3]), close:parseFloat(val[4]) })
+      })
+      console.log(values)
+      return values;
+
     }
 
     render() {
@@ -40,29 +79,7 @@ export default class StockChart extends Component {
             data= {{
             dataSets: [
                 {
-                  values: [
-                    {
-                      x: 20,
-                      shadowH: 120, // required
-                      shadowL: 2, // required
-                      open: 50, // required
-                      close: 100, // required
-                    },
-                    {
-                        x: 30,
-                        shadowH: 800, // required
-                        shadowL: 40, // required
-                        open: 150, // required
-                        close: 100, // required
-                      },
-                      {
-                        x: 40,
-                        shadowH: 300, // required
-                        shadowL: 0, // required
-                        open: 50, // required
-                        close: 200, // required
-                      }
-                  ],
+                  values: this.state.chartdata,
                   label: 'Stocksss', // required
                   config: {
                     highlightColor: processColor('darkgray'),
