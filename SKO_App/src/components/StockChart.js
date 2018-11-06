@@ -12,7 +12,6 @@ export default class StockChart extends Component {
 
     state = {chartdata:[]}
 
-      
 
     componentDidMount(){
       console.log("Hello")
@@ -29,7 +28,7 @@ export default class StockChart extends Component {
       , );
       let responseJson = await response.json();
       this.setState({chartdata: this.formatjson(responseJson)})
-      
+
 
     }
 
@@ -48,11 +47,11 @@ export default class StockChart extends Component {
     }
 
     render() {
-        
+
         return (
             <View style={{flex: 1}}>
         <View style={styles.container}>
-          <CandleStickChart style={styles.chart} 
+          <CandleStickChart style={styles.chart}
             chartBackgroundColor={2}
             data= {{
             dataSets: [
@@ -89,4 +88,3 @@ const styles = StyleSheet.create({
       flex: 1
     }
   });
-  
