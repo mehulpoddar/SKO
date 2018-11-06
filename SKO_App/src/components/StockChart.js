@@ -10,29 +10,7 @@ export default class StockChart extends Component {
         headerMode: 'none'
       }
 
-    state = {chartdata:[
-      {
-        x: 20,
-        shadowH: 120, // required
-        shadowL: 2, // required
-        open: 50, // required
-        close: 100, // required
-      },
-      {
-          x: 30,
-          shadowH: 800, // required
-          shadowL: 40, // required
-          open: 150, // required
-          close: 100, // required
-        },
-        {
-          x: 40,
-          shadowH: 300, // required
-          shadowL: 0, // required
-          open: 50, // required
-          close: 200, // required
-        }
-    ]}
+    state = {chartdata:[]}
 
       
 
