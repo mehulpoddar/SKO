@@ -7,19 +7,28 @@
  */
 
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {View, Alert} from 'react-native';
 import firebase from 'firebase';
+import OneSignal from 'react-native-onesignal';
 
 import Login from './src/components/Authentication/Login';
 import {StackNavi, TabNavi} from './src/components/Root';
 import Splash from './src/components/Authentication/Splash';
 import Sub from './src/components/Subscription';
 
+const version = '1.0.0';
+
 export default class App extends Component{
 
-  state={loggedIn:null}
+  state={loggedIn:null, allow: false}
 
   componentWillMount(){
+
+    OneSignal.init("391cef7d-0a95-4665-8c33-92aafef044a5");
+    OneSignal.addEventListener('received', this.onReceived);
+    OneSignal.addEventListener('opened', this.onOpened);
+    OneSignal.addEventListener('ids', this.onIds);
+
     // Initialize Firebase
     if (!firebase.apps.length) {
       const config = {
@@ -34,17 +43,40 @@ export default class App extends Component{
     }
 
 
+    
   }
+    
+
   componentDidMount(){
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-          this.setState({ loggedIn: true });
-      } else {
-        this.setState({ loggedIn: false });
-      }
-    });
+    firebase.database().ref('ver_control/cur_ver').on('value',(val)=>{
+      console.log(val.val())
+      if(version==val.val())
+    {
+        this.setState({ allow: true },()=>{
+          firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                this.setState({ loggedIn: true });
+            } else {
+              this.setState({ loggedIn: false });
+            }
+          });
+        });
+    } else {
+        firebase.auth().signOut();
+        Alert.alert('App Update!', 'Update your app from the Play Store to continue using SKO services.', [], {cancellable: false});
+    }
+    })
+    
   }
+
+  componentWillUnmount() {
+    OneSignal.removeEventListener('received', this.onReceived);
+    OneSignal.removeEventListener('opened', this.onOpened);
+    OneSignal.removeEventListener('ids', this.onIds);
+  }
+  
   renderScreens(){
+    if(this.state.allow) {
     switch(this.state.loggedIn)
     {
       case null:
@@ -54,6 +86,8 @@ export default class App extends Component{
       case false:
         return <StackNavi />;
     }
+  }
+  return <Splash />
   }
   render() {
     return (
