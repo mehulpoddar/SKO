@@ -8,7 +8,7 @@ export default class Splash extends Component {
     render() {
         return (
             <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                <Image source={require('../../Resources/Images/applogo.png')} style={{width:500, height:500}} />
+                <Image source={require('../../Resources/Images/sko_logo.jpg')} style={{width:'90%', height:'70%', resizeMode:'contain'}} />
             </View>
         );
     }
