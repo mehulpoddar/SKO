@@ -18,6 +18,11 @@ export default class SignUpForm extends Component {
         const password = this.state.password
         const { navigate } = this.props.navigation;
 
+        if(this.state.email==''&&this.state.password==''&&this.state.experience==''&&this.state.username=='')
+        {
+            ToastAndroid.show('Please fill all the fields', ToastAndroid.SHORT);
+        }
+        else{
         firebase.auth().createUserWithEmailAndPassword(email,password).then(
             ()=>{
                 firebase.database().ref().child('users').child(firebase.auth().currentUser.uid).set({
@@ -32,6 +37,9 @@ export default class SignUpForm extends Component {
         .catch(() => {
             ToastAndroid.show('Invalid Credentials', ToastAndroid.SHORT);
           })
+        }
+
+        
     }
 
         renderSpinnerButton(){

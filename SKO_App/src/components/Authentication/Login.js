@@ -66,10 +66,10 @@ export default class Login extends Component{
 
     render() {
         return (
-            <KeyboardAwareScrollView style={{flex: 1,backgroundColor: '#fff',flexDirection: 'column'}} >
-                <TouchableWithoutFeedback style={{flex: 1,backgroundColor: '#4857cb',flexDirection: 'column',}} 
+            <KeyboardAwareScrollView style={{width:'100%',height:'100%',backgroundColor: '#fff',flexDirection: 'column'}} >
+                <TouchableWithoutFeedback style={{width:'100%',height:'100%',backgroundColor: '#4857cb',flexDirection: 'column'}} 
                                                   onPress={Keyboard.dismiss}>
-                <View style={{justifyContent: 'center',flex: 1, alignItems:'center'}}>
+                <View style={{justifyContent: 'center',width:'100%',height:'100%', alignItems:'center'}}>
                 <View style={{top:0,left:0,right:0, height:60, backgroundColor:'#B71C1C', alignItems:'center', justifyContent:'center', width:'100%', borderBottomRightRadius:30, borderBottomLeftRadius:30}}>
                     <Text style={{color:'#fff', fontSize:18}}>SKO Wealth Advisory</Text>
                 </View>
