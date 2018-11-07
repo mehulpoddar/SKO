@@ -60,6 +60,8 @@ export const StackNavi = StackNavigator({
       }, {
       initialRouteName: 'chart',
       tabBarPosition: 'bottom',
+
+  swipeEnabled: false,
       tabBarOptions: {
         header: null,
         showIcon: true,
@@ -109,6 +111,7 @@ export const TabNavi = TabNavigator({
   }, {
   initialRouteName: 'chart',
   tabBarPosition: 'bottom',
+  swipeEnabled: false,
   tabBarOptions: {
     header: null,
     showIcon: true,

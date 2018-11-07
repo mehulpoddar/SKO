@@ -116,7 +116,6 @@ export default class StockChart extends Component {
       this.formatjson(responseJson, sheetName)
     }
 
-    this.sheetNamehandle = ''
     
     formatjson(responseJson, sheetName){
       let valuesarray = responseJson.values
@@ -183,7 +182,6 @@ export default class StockChart extends Component {
 
     handleSelect(event) {
       let entry = event.nativeEvent
-      sheetName = sheetNamehandle
       console.log('Name1', event)
       Toas
       if(this.state.sheetData.sheetName[event.nativeEvent.x] != undefined && this.state.sheetData.sheetName[event.nativeEvent.x] != {})
@@ -250,8 +248,13 @@ export default class StockChart extends Component {
 
         <View style={{width:'100%',height:200, marginTop:4}}>
         <CandleStickChart style={{width:'100%', height:'100%'}}
-            chartBackgroundColor={2}
+            chartBackgroundColor={0}
             chartDescription={{text:"Tap a candle to view"}}
+
+            xAxis={{drawLabels: true,
+              drawGridLines: false,
+              drawAxisLine: false,
+              gridLineWidth:false}}
             zoom={{
               scaleX: 5,
               scaleY: 0,
@@ -281,9 +284,8 @@ export default class StockChart extends Component {
            }
         }
         
-        onSelect={()=>{
-          this.sheetNamehandle='BankNiftyH'
-          this.handleSelect.bind(this)}
+        onSelect={
+          this.handleSelect.bind(this)
         }
           />
           </View>
