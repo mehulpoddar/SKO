@@ -171,7 +171,7 @@ export default class StockChart extends Component {
         var charttemp = {...this.state.chartdata}
         var sheettemp = {...this.state.sheetData}
 
-        charttemp[sheetName] = {values};
+        charttemp[sheetName] = values;
         sheettemp[sheetName] = sheetValues;
 
         this.setState({chartdata: charttemp, sheetData: sheettemp})
