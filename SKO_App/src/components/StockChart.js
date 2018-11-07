@@ -3,23 +3,25 @@ import { AppRegistry,
     StyleSheet,
     Text,
     Image,
-    View, 
-    processColor, 
+    View,
+    processColor,
     ScrollView,
     TouchableOpacity,
-    Modal 
+    Modal
 } from 'react-native';
 import { CandleStickChart } from 'react-native-charts-wrapper';
 import firebase from 'firebase';
 var handleDo = true;
+var tempData = {};
 
 export default class StockChart extends Component {
     static navigationOptions = {
         headerMode: 'none'
       }
 
-    state = {chartdata:[
-      {
+    state = {chartdata:{
+      BankNiftyH: [
+        {
         x: 20,
         shadowH: 0, // required
         shadowL: 0, // required
@@ -41,20 +43,68 @@ export default class StockChart extends Component {
           close: 0, // required
         }
     ],
+    CrudeOilH: [
+      {
+      x: 20,
+      shadowH: 0, // required
+      shadowL: 0, // required
+      open: 0, // required
+      close: 0, // required
+    },
+    {
+        x: 30,
+        shadowH: 0, // required
+        shadowL: 0, // required
+        open: 0, // required
+        close: 0, // required
+      },
+      {
+        x: 40,
+        shadowH: 0, // required
+        shadowL: 0, // required
+        open: 0, // required
+        close: 0, // required
+      }
+  ],
+      NaturalGasH: [
+        {
+        x: 20,
+        shadowH: 0, // required
+        shadowL: 0, // required
+        open: 0, // required
+        close: 0, // required
+      },
+      {
+          x: 30,
+          shadowH: 0, // required
+          shadowL: 0, // required
+          open: 0, // required
+          close: 0, // required
+        },
+        {
+          x: 40,
+          shadowH: 0, // required
+          shadowL: 0, // required
+          open: 0, // required
+          close: 0, // required
+        }
+    ]},
     CandleModal:false,
     selectedCandleValues:{x:'',open:'',close:'',high:'',low:''},
-    sheetData:[]
+    sheetData:{BankNiftyH:[], CrudeOilH:[], NaturalGasH:[]}
   }
 
-    
+
 
     componentDidMount(){
       console.log("Hello")
-      this.getData();
+      this.getData('BankNiftyH');
+      this.getData('CrudeOilH');
+      this.getData('NaturalGasH');
     }
 
-    async getData(){
-      let response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1lbK_NC7BTYkNwh--jiUZ8-ETzZMNzqiAuKfv3OMUOwU/values/BankNiftyH?key=AIzaSyCoxSCbr5KNjS5xmezt09O0PLP3k8aaxGg', {
+    async getData(sheetName){
+      let response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1lbK_NC7BTYkNwh--jiUZ8-ETzZMNzqiAuKfv3OMUOwU/values/'+sheetName+'?key=AIzaSyCoxSCbr5KNjS5xmezt09O0PLP3k8aaxGg', {
         method: 'GET',
         headers: {
           "Content-Type": "application/json; charset=utf-8",
@@ -62,12 +112,10 @@ export default class StockChart extends Component {
       }
       , );
       let responseJson = await response.json();
-      this.formatjson(responseJson)
-
-
+      this.formatjson(responseJson, sheetName)
     }
 
-    formatjson(responseJson){
+    formatjson(responseJson, sheetName){
       let valuesarray = responseJson.values
       console.log(valuesarray)
       valuesarray = valuesarray.slice(1)
@@ -81,7 +129,7 @@ export default class StockChart extends Component {
           lastx = parseInt(val[0])
           sheetValues[parseInt(val[0])] = ({ shadowH:parseFloat(val[3]), shadowL:parseFloat(val[2]), open:parseFloat(val[1]), close:parseFloat(val[4])})
           values.push({ x:parseInt(val[0]), shadowH:parseFloat(val[3])-parseFloat(val[1]), shadowL:parseFloat(val[2])-parseFloat(val[1]), open:0, close:parseFloat(val[4])-parseFloat(val[1]) })
-        
+
       })
       values.push({
         x: lastx + xdiff,
@@ -89,7 +137,7 @@ export default class StockChart extends Component {
         shadowL: 0, // required
         open: 0, // required
         close: 0, // required
-        
+
       },
       {
           x: lastx + 2*xdiff,
@@ -119,8 +167,14 @@ export default class StockChart extends Component {
           open: 0, // required
           close: 0, // required
         })
-      
-        this.setState({chartdata: values, sheetData:  sheetValues})
+
+        var charttemp = {...this.state.chartdata}
+        var sheettemp = {...this.state.sheetData}
+
+        charttemp[sheetName] = {values};
+        sheettemp[sheetName] = sheetValues;
+
+        this.setState({chartdata: charttemp, sheetData: sheettemp})
 
     }
 
@@ -143,7 +197,7 @@ export default class StockChart extends Component {
 
     ShowCandleValues(){
       var statevalues = this.state.selectedCandleValues
-      
+
       return(
         <View style={{flex:1,justifyContent: 'center' ,alignItems: 'center'}}>
       <Modal
@@ -156,14 +210,14 @@ export default class StockChart extends Component {
         <View style={{backgroundColor:'#b71c1c', width:'100%', height:'17%',borderTopLeftRadius:25, borderTopRightRadius:25, alignItems:'center', justifyContent:'center' }}>
           <Text style={{fontSize:18, color:'#fff'}}>{statevalues.x}</Text>
         </View>
-        
+
         <View style={{backgroundColor:'#b71c1c7f', width:'100%', height:'64%', alignItems:'center', justifyContent:'center'}}>
         <Text style={{color:'#fff', marginBottom:5, fontSize:18}}>Open  : {statevalues.open}</Text>
         <Text style={{color:'#fff', marginBottom:5, fontSize:18}}>Close : {statevalues.close}</Text>
         <Text style={{color:'#fff', marginBottom:5, fontSize:18}}>High  : {statevalues.high}</Text>
         <Text style={{color:'#fff', marginBottom:5, fontSize:18}}>Low   : {statevalues.low}</Text>
         </View>
-        
+
         <TouchableOpacity onPress={this.closeCandleModal.bind(this,false)} style={{backgroundColor:'#b71c1c', width:'100%', height:'17%',justifyContent:'center',borderBottomLeftRadius:25, borderBottomRightRadius:25, alignItems:'center' }}>
           <Text style={{fontSize:18, color:'#fff'}}>Close</Text>
         </TouchableOpacity>
@@ -171,12 +225,12 @@ export default class StockChart extends Component {
         </View>
      </Modal>
      </View>
-      ) 
+      )
     }
 
 
     render() {
-        
+
         return (
             <View style={{flex: 1}}>
             {this.ShowCandleValues()}
@@ -187,7 +241,7 @@ export default class StockChart extends Component {
                     </TouchableOpacity>
                 </View>
         <ScrollView style={{ width:'100%', height:'100%',backgroundColor:'#FCF5FF'}}>
-          
+
         <View style={{width:'100%',height:200, marginTop:4}}>
         <CandleStickChart style={{width:'100%', height:'100%'}}
             chartBackgroundColor={2}
@@ -202,8 +256,8 @@ export default class StockChart extends Component {
             data= {{
             dataSets: [
                 {
-                  values: this.state.chartdata,
-                  label: 'Stocksss', // required
+                  values: this.state.chartdata.BankNiftyH,
+                  label: 'BankNifty', // required
                   config: {
                     drawValues: false,
                     highlightColor: processColor('darkgray'),
@@ -239,8 +293,8 @@ export default class StockChart extends Component {
             data= {{
             dataSets: [
                 {
-                  values: this.state.chartdata,
-                  label: 'Stocksss', // required
+                  values: this.state.chartdata.CrudeOilH,
+                  label: 'CrudeOil', // required
                   config: {
                     drawValues: false,
                     highlightColor: processColor('darkgrey'),
@@ -274,8 +328,8 @@ export default class StockChart extends Component {
             data= {{
             dataSets: [
                 {
-                  values: this.state.chartdata,
-                  label: 'Stocksss', // required
+                  values: this.state.chartdata.NaturalGasH,
+                  label: 'NaturalGas', // required
                   config: {
                     drawValues: false,
                     highlightColor: processColor('darkgray'),
@@ -294,7 +348,7 @@ export default class StockChart extends Component {
         onSelect={this.handleSelect.bind(this)}
           />
           </View>
-                
+
         </ScrollView>
       </View>
         );
@@ -310,4 +364,3 @@ const styles = StyleSheet.create({
       flex: 1
     }
   });
-  
