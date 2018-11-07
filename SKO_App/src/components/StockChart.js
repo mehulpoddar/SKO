@@ -178,11 +178,11 @@ export default class StockChart extends Component {
 
     }
 
-    handleSelect(event) {
+    handleSelect(event,sheetName) {
       let entry = event.nativeEvent
-      if(this.state.sheetData[event.nativeEvent.x] != undefined && this.state.sheetData[event.nativeEvent.x] != {})
+      if(this.state.sheetData.sheetName[event.nativeEvent.x] != undefined && this.state.sheetData.sheetName[event.nativeEvent.x] != {})
       {
-      let temp = this.state.sheetData[event.nativeEvent.x]
+      let temp = this.state.sheetData.sheetName[event.nativeEvent.x]
       console.log(event.nativeEvent)
       this.setState({selectedCandleValues:{x:event.nativeEvent.x, open: temp.open, close: temp.close, high:temp.shadowH, low:temp.shadowL}, CandleModal:true})
     }
@@ -274,7 +274,7 @@ export default class StockChart extends Component {
 
            }
         }
-        onSelect={this.handleSelect.bind(this)}
+        onSelect={this.handleSelect.bind(this,'BankNiftyH')}
           />
           </View>
 
@@ -310,7 +310,7 @@ export default class StockChart extends Component {
 
            }
         }
-        onSelect={this.handleSelect.bind(this)}
+        onSelect={this.handleSelect.bind(this,'CrudeOilH')}
           />
           </View>
 
@@ -345,7 +345,7 @@ export default class StockChart extends Component {
 
            }
         }
-        onSelect={this.handleSelect.bind(this)}
+        onSelect={this.handleSelect.bind(this,'NaturalGasH')}
           />
           </View>
 
