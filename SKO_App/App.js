@@ -16,7 +16,7 @@ import {StackNavi, TabNavi} from './src/components/Root';
 import Splash from './src/components/Authentication/Splash';
 import Sub from './src/components/Subscription';
 
-const version = '1.0.0';
+const version = '1.0.2';
 
 export default class App extends Component{
 
@@ -43,9 +43,9 @@ export default class App extends Component{
     }
 
 
-    
+
   }
-    
+
 
   componentDidMount(){
     firebase.database().ref('ver_control/cur_ver').on('value',(val)=>{
@@ -66,7 +66,7 @@ export default class App extends Component{
         Alert.alert('App Update!', 'Update your app from the Play Store to continue using SKO services.', [], {cancellable: false});
     }
     })
-    
+
   }
 
   componentWillUnmount() {
@@ -74,7 +74,7 @@ export default class App extends Component{
     OneSignal.removeEventListener('opened', this.onOpened);
     OneSignal.removeEventListener('ids', this.onIds);
   }
-  
+
   renderScreens(){
     if(this.state.allow) {
     switch(this.state.loggedIn)

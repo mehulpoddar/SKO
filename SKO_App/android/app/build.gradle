@@ -94,7 +94,7 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 buildscript {
     repositories {
-        maven { url 'https://plugins.gradle.org/m2/' } // Gradle Plugin Portal 
+        maven { url 'https://plugins.gradle.org/m2/' } // Gradle Plugin Portal
     }
     dependencies {
         classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.1, 0.99.99]'
@@ -109,8 +109,8 @@ android {
         applicationId "com.sko_app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "1.0.1"
+        versionCode 4
+        versionName "1.0.2"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
