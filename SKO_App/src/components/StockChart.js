@@ -280,7 +280,7 @@ export default class StockChart extends Component {
         
       <View style={{justifyContent: 'center' ,alignItems: 'center', width:'80%', height:'35%'}}>
         <View style={{backgroundColor:'#b71c1c', width:'100%', height:'17%',borderTopLeftRadius:25, borderTopRightRadius:25, alignItems:'center', justifyContent:'center' }}>
-          <Text style={{fontSize:18, color:'#fff'}}>asda</Text>
+          <Text style={{fontSize:18, color:'#fff'}}>{this.state.currentsheetStatus}</Text>
         </View>
 
         <ScrollView style={{width:'100%', height:'100%',backgroundColor:'#fff'}} contentContainerStyle={{alignItems:'center'}}>
