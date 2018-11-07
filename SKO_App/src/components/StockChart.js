@@ -14,6 +14,7 @@ import firebase from 'firebase';
 var handleDo = true;
 var tempData = {};
 
+
 export default class StockChart extends Component {
     static navigationOptions = {
         headerMode: 'none'
@@ -94,7 +95,7 @@ export default class StockChart extends Component {
     sheetData:{BankNiftyH:[], CrudeOilH:[], NaturalGasH:[]}
   }
 
-
+   
 
     componentDidMount(){
       console.log("Hello")
@@ -115,6 +116,8 @@ export default class StockChart extends Component {
       this.formatjson(responseJson, sheetName)
     }
 
+    this.sheetNamehandle = ''
+    
     formatjson(responseJson, sheetName){
       let valuesarray = responseJson.values
       console.log(valuesarray)
@@ -178,8 +181,10 @@ export default class StockChart extends Component {
 
     }
 
-    handleSelect(event,sheetName) {
+    handleSelect(event) {
       let entry = event.nativeEvent
+      sheetName = sheetNamehandle
+      console.log('Name1', event)
       if(this.state.sheetData.sheetName[event.nativeEvent.x] != undefined && this.state.sheetData.sheetName[event.nativeEvent.x] != {})
       {
       let temp = this.state.sheetData.sheetName[event.nativeEvent.x]
@@ -274,7 +279,11 @@ export default class StockChart extends Component {
 
            }
         }
-        onSelect={this.handleSelect.bind(this,'BankNiftyH')}
+        
+        onSelect={()=>{
+          this.sheetNamehandle='BankNiftyH'
+          this.handleSelect.bind(this)}
+        }
           />
           </View>
 
@@ -310,7 +319,8 @@ export default class StockChart extends Component {
 
            }
         }
-        onSelect={this.handleSelect.bind(this,'CrudeOilH')}
+        sheetNamehandle = 'CrudeOilH'
+        onSelect={this.handleSelect.bind(this)}
           />
           </View>
 
@@ -345,7 +355,8 @@ export default class StockChart extends Component {
 
            }
         }
-        onSelect={this.handleSelect.bind(this,'NaturalGasH')}
+        sheetNamehandle='NaturalGasH'
+        onSelect={this.handleSelect.bind(this)}
           />
           </View>
 
