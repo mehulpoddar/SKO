@@ -7,7 +7,7 @@ export default class Profile extends Component {
         headerMode: 'none'
       }
 
-    state={email:'', username:'', experience:'', returns:'',changePasswordMail:'',
+    state={email:'', username:'', experience:'', returns:'',changePasswordMail:'',phone:'',
     conv_retuns: { 0: '10,000 - 50,000', 1: '50,000 - 1,00,000', 2: '1 lakh to 3 lakhs', 3: 'More than 3 lakhs' },
     conv_experience: { 0: 'No Experience', 1: '1 - 6 months', 2: '7 - 11 months', 3: '1 - 3 years', 4: '4 - 8 years', 5: 'More than 8' } }
 
@@ -16,7 +16,7 @@ export default class Profile extends Component {
         
         firebase.database().ref(`users/${firebase.auth().currentUser.uid}/`).on('value',(user)=>{
             console.log(user.val())
-            this.setState({email: user.val().email, username: user.val().username, experience: this.state.conv_experience[user.val().experience] });
+            this.setState({email: user.val().email, username: user.val().username, experience: this.state.conv_experience[user.val().experience], phone:user.val().phone });
         }) 
     }
 
@@ -55,8 +55,12 @@ export default class Profile extends Component {
                         <Text style={{width:100, marginLeft:14, fontSize:16}}>Email</Text>
                         <Text style={{marginLeft:20, fontSize:16}}>{this.state.email}</Text>
                     </View>
+                    <View style={{height:40,marginBottom:5, flexDirection:'row', borderBottomColor:'#fff', borderBottomColor:'#dedede', borderBottomWidth:1, alignItems:'center'}}>
+                        <Text style={{width:100, marginLeft:14, fontSize:16}}>Phone No</Text>
+                        <Text style={{marginLeft:20, fontSize:16}}>{this.state.phone}</Text>
+                    </View>
                     <View style={{height:40,marginBottom:5, flexDirection:'row', borderBottomColor:'#fff', borderBottomWidth:1, alignItems:'center'}}>
-                        <Text style={{width:100, marginLeft:14, fontSize:16}}>Experience</Text>
+                        <Text style={{width:100, marginLeft:14, fontSize:16}}>Trading Experience</Text>
                         <Text style={{marginLeft:20, fontSize:16}}>{this.state.experience}</Text>
                     </View>
 

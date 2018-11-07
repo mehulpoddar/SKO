@@ -11,14 +11,14 @@ export default class SignUpForm extends Component {
     static navigationOptions = {
         headerMode: 'none'
       }
-      state={email:'', password:'', username:'',  experience:'',signUpstatus:false}
+      state={email:'', password:'', username:'',  experience:'',signUpstatus:false, phone:''}
 
       firebaseSignUp() {
         const email = this.state.email
         const password = this.state.password
         const { navigate } = this.props.navigation;
 
-        if(this.state.email==''&&this.state.password==''&&this.state.experience==''&&this.state.username=='')
+        if(this.state.email==''&&this.state.password==''&&this.state.experience==''&&this.state.username==''&&this.state.phone=='')
         {
             ToastAndroid.show('Please fill all the fields', ToastAndroid.SHORT);
         }
@@ -29,6 +29,7 @@ export default class SignUpForm extends Component {
                     email: this.state.email,
                     username: this.state.username,
                     experience: this.state.experience,
+                    phone:this.state.phone,
                    },()=>{
                     this.props.navigation.navigate('HomeNavi', {screen:'StockChart'})
                    })
@@ -104,6 +105,20 @@ export default class SignUpForm extends Component {
                             secureTextEntry
                             onChangeText={password=>{this.setState({password:password})}}
                             value={this.state.password}
+                            autoCorrect={false}
+                        />
+                        <TextInput style={{width:'80%',
+                                            height: 40,
+                                        backgroundColor: '#fff',
+                                        color: '#000',
+                                        borderWidth:2,
+                                        borderColor:'#b71c1c',
+                                        marginBottom: 20,
+                                        paddingHorizontal: 10}}
+                            placeholder="Enter Phone Number"
+                            secureTextEntry
+                            onChangeText={phone=>{this.setState({phone:phone})}}
+                            value={this.state.phone}
                             autoCorrect={false}
                         />
 

@@ -91,7 +91,7 @@ export default class StockChart extends Component {
           close: 0, // required
         }
     ]},
-    CandleModal:false,
+    CandleModal:false,statusModal:false,sheet1status:{},sheet2status:{},sheet3status:{},currentsheetStatus:'',
     selectedCandleValues:{x:'',open:'',close:'',high:'',low:''},
     sheetData:{BankNiftyH:{}, CrudeOilH:{}, NaturalGasH:{}}
   }
@@ -228,12 +228,89 @@ export default class StockChart extends Component {
       )
     }
 
+    showStatusModal(sheetname){
+      firebase.database().ref('status/'+sheetname+'/').on('value',(val)=>{
+        console.log(val.val())
+        if(sheetname=='BankNiftyH')
+        {
+        this.setState({statusModal:true, sheet1status:val.val(), currentsheetStatus:'BankNiftyH'})
+        }
+        else if(sheetname=='CrudeOilH')
+        {
+          this.setState({statusModal:true, sheet2status:val.val(), currentsheetStatus:'CrudeOilH'})
+        }
+        else
+        {
+          this.setState({statusModal:true, sheet3status:val.val(), currentsheetStatus:'NaturalGasH'})
+        }
+      })
+      
+    }
+    closeStatusModal(visible){
+      this.setState({statusModal:visible})
+      }
+
+    ShowStatusValues(){
+      var sheetstatus = {}
+      console.log(this.state.sheet2status)
+      if(this.state.currentsheetStatus=='BankNiftyH')
+      {
+        sheetstatus = this.state.sheet1status
+      }
+      else if(this.state.currentsheetStatus=='CrudeOilH')
+      {
+        sheetstatus = this.state.sheet2status
+      }
+      else
+      {
+        sheetstatus = this.state.sheet3status
+      }
+      
+      return(
+        <View style={{flex:1,justifyContent: 'center' ,alignItems: 'center'}}>
+      <Modal
+            visible={this.state.statusModal}
+            transparent={true}
+
+            swipeToClose = {false}
+            swipeArea={0}
+            animationType={"fade"}
+            onRequestClose={ () => { this.closeStatusModal(!this.state.statusModal)} } >
+      <View style={{justifyContent: 'center' ,alignItems: 'center',width:'100%',height:'100%', alignSelf:'center',}}>
+        
+      <View style={{justifyContent: 'center' ,alignItems: 'center', width:'80%', height:'35%'}}>
+        <View style={{backgroundColor:'#b71c1c', width:'100%', height:'17%',borderTopLeftRadius:25, borderTopRightRadius:25, alignItems:'center', justifyContent:'center' }}>
+          <Text style={{fontSize:18, color:'#fff'}}>asda</Text>
+        </View>
+
+        <ScrollView style={{width:'100%', height:'100%',backgroundColor:'#fff'}} contentContainerStyle={{alignItems:'center'}}>
+          {
+            Object.keys(sheetstatus).map(time => {
+              //console.log(chaps, this.state.subjects[this.state.modal.noti][this.state.modal.mod][chaps].url)
+              return (<Text style={{color:'#000', padding:10}}>{time}:{sheetstatus[time]}</Text> )     
+          })
+        } 
+        </ScrollView>
+        
+
+        <TouchableOpacity onPress={this.closeStatusModal.bind(this,false)} style={{backgroundColor:'#b71c1c', width:'100%', height:'17%',justifyContent:'center',borderBottomLeftRadius:25, borderBottomRightRadius:25, alignItems:'center' }}>
+          <Text style={{fontSize:18, color:'#fff'}}>Close</Text>
+        </TouchableOpacity>
+        </View>
+        </View>
+     </Modal>
+     </View>
+      )
+    }
+
+
 
     render() {
 
         return (
             <View style={{flex: 1}}>
             {this.ShowCandleValues()}
+            {this.ShowStatusValues()}
             <View style={{top:0,left:0,right:0, height:50, backgroundColor:'#B71C1C', alignItems:'center', justifyContent:'center'}}>
                     <Text style={{color:'#fff', fontSize:18}}>Charts</Text>
                     <TouchableOpacity onPress={this.getData.bind(this)} style={{width:40, height:40,right:0, position:'absolute', justifyContent:'center' }}>
@@ -242,8 +319,8 @@ export default class StockChart extends Component {
                 </View>
         <ScrollView style={{ width:'100%', height:'100%',backgroundColor:'#FCF5FF'}}>
 
-        <View style={{width:'100%',height:200, marginTop:4}}>
-        <CandleStickChart style={{width:'100%', height:'100%'}}
+        <View style={{width:'100%',height:300, marginTop:4}}>
+        <CandleStickChart style={{width:'100%', height:'80%'}}
             chartBackgroundColor={0}
             chartDescription={{text:"Tap a candle to view"}}
 
@@ -251,8 +328,9 @@ export default class StockChart extends Component {
               drawGridLines: false,
               drawAxisLine: false,
               gridLineWidth:false}}
+
             zoom={{
-              scaleX: 5,
+              scaleX: 2,
               scaleY: 0,
               xValue: 100,
               yValue: 0,
@@ -285,15 +363,22 @@ export default class StockChart extends Component {
           this.handleSelect(event)}
         }
           />
+
+          <TouchableOpacity onPress={this.showStatusModal.bind(this, 'BankNiftyH')} style={{marginBottom:20, height:'20%', alignItems:'center'}}>
+          <Text style={{padding:10, backgroundColor:'#b71c1c',borderRadius:10, color:'#fff'}}>Check Status</Text>
+          </TouchableOpacity>
           </View>
 
-          <View style={{width:'100%',height:200}}>
-        <CandleStickChart style={{width:'100%', height:'100%'}}
+          <View style={{width:'100%',height:300}}>
+        <CandleStickChart style={{width:'100%', height:'80%'}}
             chartBackgroundColor={2}
-
+            xAxis={{drawLabels: true,
+              drawGridLines: false,
+              drawAxisLine: false,
+              gridLineWidth:false}}
             chartDescription={{text:"Tap a candle to view"}}
             zoom={{
-              scaleX: 5,
+              scaleX: 2,
               scaleY: 0,
               xValue: 100,
               yValue: 0,
@@ -325,14 +410,21 @@ export default class StockChart extends Component {
           this.handleSelect(event)}
         }
           />
+          <TouchableOpacity onPress={this.showStatusModal.bind(this, 'CrudeOilH')} style={{marginBottom:20, height:'20%', alignItems:'center'}}>
+          <Text style={{padding:10, backgroundColor:'#b71c1c',borderRadius:10, color:'#fff'}}>Check Status</Text>
+          </TouchableOpacity>
           </View>
 
-          <View style={{width:'100%',height:200}}>
-        <CandleStickChart style={{width:'100%', height:'100%'}}
+          <View style={{width:'100%',height:300}}>
+        <CandleStickChart style={{width:'100%', height:'80%'}}
             chartBackgroundColor={2}
+            xAxis={{drawLabels: true,
+              drawGridLines: false,
+              drawAxisLine: false,
+              gridLineWidth:false}}
             chartDescription={{text:"Tap a candle to view"}}
             zoom={{
-              scaleX: 5,
+              scaleX: 2,
               scaleY: 0,
               xValue: 100,
               yValue: 0,
@@ -363,6 +455,9 @@ export default class StockChart extends Component {
           this.handleSelect(event)}
         }
           />
+          <TouchableOpacity onPress={this.showStatusModal.bind(this, 'NaturalGasH')} style={{marginBottom:20, height:'20%', alignItems:'center'}}>
+          <Text style={{padding:10, backgroundColor:'#b71c1c',borderRadius:10, color:'#fff'}}>Check Status</Text>
+          </TouchableOpacity>
           </View>
 
         </ScrollView>
