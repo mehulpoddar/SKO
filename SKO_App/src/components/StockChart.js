@@ -7,13 +7,14 @@ import { AppRegistry,
     processColor,
     ScrollView,
     TouchableOpacity,
+    ToastAndroid,
     Modal
 } from 'react-native';
 import { CandleStickChart } from 'react-native-charts-wrapper';
 import firebase from 'firebase';
 var handleDo = true;
 var tempData = {};
-
+var sheetNamehandle = '';
 
 export default class StockChart extends Component {
     static navigationOptions = {
@@ -92,13 +93,13 @@ export default class StockChart extends Component {
     ]},
     CandleModal:false,
     selectedCandleValues:{x:'',open:'',close:'',high:'',low:''},
-    sheetData:{BankNiftyH:[], CrudeOilH:[], NaturalGasH:[]}
+    sheetData:{BankNiftyH:{}, CrudeOilH:{}, NaturalGasH:{}}
   }
 
-   
+
 
     componentDidMount(){
-      console.log("Hello")
+      console.log("Hello");
       this.getData('BankNiftyH');
       this.getData('CrudeOilH');
       this.getData('NaturalGasH');
@@ -116,8 +117,6 @@ export default class StockChart extends Component {
       this.formatjson(responseJson, sheetName)
     }
 
-    this.sheetNamehandle = ''
-    
     formatjson(responseJson, sheetName){
       let valuesarray = responseJson.values
       console.log(valuesarray)
@@ -182,14 +181,9 @@ export default class StockChart extends Component {
     }
 
     handleSelect(event) {
-      let entry = event.nativeEvent
-      sheetName = sheetNamehandle
-      console.log('Name1', event)
-      Toas
-      if(this.state.sheetData.sheetName[event.nativeEvent.x] != undefined && this.state.sheetData.sheetName[event.nativeEvent.x] != {})
+      let temp = this.state.sheetData[sheetNamehandle][event.nativeEvent.x]
+      if(temp != undefined && temp != {})
       {
-      let temp = this.state.sheetData.sheetName[event.nativeEvent.x]
-      console.log(event.nativeEvent)
       this.setState({selectedCandleValues:{x:event.nativeEvent.x, open: temp.open, close: temp.close, high:temp.shadowH, low:temp.shadowL}, CandleModal:true})
     }
   }
@@ -280,10 +274,10 @@ export default class StockChart extends Component {
 
            }
         }
-        
-        onSelect={()=>{
-          this.sheetNamehandle='BankNiftyH'
-          this.handleSelect.bind(this)}
+
+        onSelect={(event)=>{
+          sheetNamehandle='BankNiftyH';
+          this.handleSelect(event)}
         }
           />
           </View>
@@ -320,8 +314,11 @@ export default class StockChart extends Component {
 
            }
         }
-        sheetNamehandle = 'CrudeOilH'
-        onSelect={this.handleSelect.bind(this)}
+
+        onSelect={(event)=>{
+          sheetNamehandle='CrudeOilH';
+          this.handleSelect(event)}
+        }
           />
           </View>
 
@@ -356,8 +353,10 @@ export default class StockChart extends Component {
 
            }
         }
-        sheetNamehandle='NaturalGasH'
-        onSelect={this.handleSelect.bind(this)}
+        onSelect={(event)=>{
+          sheetNamehandle='NaturalGasH';
+          this.handleSelect(event)}
+        }
           />
           </View>
 
