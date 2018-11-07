@@ -185,6 +185,7 @@ export default class StockChart extends Component {
       let entry = event.nativeEvent
       sheetName = sheetNamehandle
       console.log('Name1', event)
+      Toas
       if(this.state.sheetData.sheetName[event.nativeEvent.x] != undefined && this.state.sheetData.sheetName[event.nativeEvent.x] != {})
       {
       let temp = this.state.sheetData.sheetName[event.nativeEvent.x]
