@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {View, Alert} from 'react-native';
+import {View, Alert, NetInfo } from 'react-native';
 import firebase from 'firebase';
 import OneSignal from 'react-native-onesignal';
 
@@ -16,11 +16,23 @@ import {StackNavi, TabNavi} from './src/components/Root';
 import Splash from './src/components/Authentication/Splash';
 import Sub from './src/components/Subscription';
 
-const version = '1.0.2';
+const version = '1.0.3';
 
-export default class App extends Component{
 
-  state={loggedIn:null, allow: false}
+export default class App extends Component {
+
+  state={loggedIn:null, allow: false, connectionInfo:'' }
+
+  handleFirstConnectivityChange(connectionInfo) {
+    console.log('First change, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+    this.setState({
+      connectionInfo: connectionInfo.type
+    }, this.forceUpdate());
+    NetInfo.removeEventListener(
+      'connectionChange',
+      this.handleFirstConnectivityChange.bind(this)
+    );
+  }
 
   componentWillMount(){
 
@@ -46,8 +58,21 @@ export default class App extends Component{
 
   }
 
+  
 
   componentDidMount(){
+    NetInfo.getConnectionInfo().then((connectionInfo) => {
+      this.setState({
+          connectionInfo: connectionInfo.type
+      });
+      console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+    });
+
+    NetInfo.addEventListener(
+      'connectionChange',
+      this.handleFirstConnectivityChange.bind(this)
+    );
+
     firebase.database().ref('ver_control/cur_ver').on('value',(val)=>{
       console.log(val.val())
       if(version==val.val())
@@ -67,13 +92,18 @@ export default class App extends Component{
     }
     })
 
+
+
   }
+  
 
   componentWillUnmount() {
     OneSignal.removeEventListener('received', this.onReceived);
     OneSignal.removeEventListener('opened', this.onOpened);
     OneSignal.removeEventListener('ids', this.onIds);
+    
   }
+
 
   renderScreens(){
     if(this.state.allow) {
@@ -90,10 +120,21 @@ export default class App extends Component{
   return <Splash />
   }
   render() {
+    if(this.state.connectionInfo!='none')
+    {
     return (
       <View style={{flex:1}}>
         {this.renderScreens()}
       </View>
     );
   }
+  else {
+    Alert.alert('Not connected to Internet', 'Please check your Internet connection!.', [], {cancellable: true});
+    return (
+      <View style={{flex:1}}>
+        <Splash />
+      </View> 
+    )
+  }
+}
 }

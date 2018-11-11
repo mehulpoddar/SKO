@@ -100,10 +100,10 @@ export default class StockChart extends Component {
 
     componentDidMount(){
       console.log("Hello");
-      this.getData('BankNiftyH');
-      this.getData('CrudeOilH');
-      this.getData('NaturalGasH');
+      this.spreadsheetData();
     }
+
+    
 
     async getData(sheetName){
       let response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1lbK_NC7BTYkNwh--jiUZ8-ETzZMNzqiAuKfv3OMUOwU/values/'+sheetName+'?key=AIzaSyCoxSCbr5KNjS5xmezt09O0PLP3k8aaxGg', {
@@ -178,6 +178,12 @@ export default class StockChart extends Component {
 
         this.setState({chartdata: charttemp, sheetData: sheettemp})
 
+    }
+
+    spreadsheetData(){
+      this.getData('BankNiftyH');
+      this.getData('CrudeOilH');
+      this.getData('NaturalGasH');
     }
 
     handleSelect(event) {
@@ -313,7 +319,7 @@ export default class StockChart extends Component {
             {this.ShowStatusValues()}
             <View style={{top:0,left:0,right:0, height:50, backgroundColor:'#B71C1C', alignItems:'center', justifyContent:'center'}}>
                     <Text style={{color:'#fff', fontSize:18}}>Charts</Text>
-                    <TouchableOpacity onPress={this.getData.bind(this)} style={{width:40, height:40,right:0, position:'absolute', justifyContent:'center' }}>
+                    <TouchableOpacity onPress={this.spreadsheetData.bind(this)} style={{width:40, height:40,right:0, position:'absolute', justifyContent:'center' }}>
                         <Image source={require('../Resources/Images/refresh.png')} style={{width:30,height:30, color:'#fff'}} />
                     </TouchableOpacity>
                 </View>
