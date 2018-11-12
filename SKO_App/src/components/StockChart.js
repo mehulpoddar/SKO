@@ -92,14 +92,15 @@ export default class StockChart extends Component {
         }
     ]},
     CandleModal:false,statusModal:false,sheet1status:{},sheet2status:{},sheet3status:{},currentsheetStatus:'',
-    selectedCandleValues:{x:'',open:'',close:'',high:'',low:''},
+    sheetLimitLines:{BankNiftyH:[], CrudeOilH:[], NaturalGasH:[]},
+    selectedCandleValues:{x:'',open:'',close:'',high:'',low:'', date:''},
     sheetData:{BankNiftyH:{}, CrudeOilH:{}, NaturalGasH:{}}
   }
 
 
 
     componentDidMount(){
-      console.log("Hello");
+      //console.log("Hello");
       this.spreadsheetData();
     }
 
@@ -119,18 +120,31 @@ export default class StockChart extends Component {
 
     formatjson(responseJson, sheetName){
       let valuesarray = responseJson.values
-      console.log(valuesarray)
+      //console.log(valuesarray)
       valuesarray = valuesarray.slice(1)
       var values = []
       var sheetValues = {}
-      var xdiff = parseInt(valuesarray[1][0]) - parseInt(valuesarray[0][0])
+      var sheetLimitLine = []
+      var xdiff = 1
       var lastx = 0
+      var countr = 0
+      var prevdate = ''
       valuesarray.forEach(
         val=>{
-          console.log(val)
-          lastx = parseInt(val[0])
-          sheetValues[parseInt(val[0])] = ({ shadowH:parseFloat(val[3]), shadowL:parseFloat(val[2]), open:parseFloat(val[1]), close:parseFloat(val[4])})
-          values.push({ x:parseInt(val[0]), shadowH:parseFloat(val[3])-parseFloat(val[1]), shadowL:parseFloat(val[2])-parseFloat(val[1]), open:0, close:parseFloat(val[4])-parseFloat(val[1]) })
+          countr = countr+1
+          
+          if(val[0]!='')
+          {
+            sheetLimitLine.push({ limit: countr, label: val[0], lineColor: processColor('black'), lineWidth: 2, lineDashPhase: 2,
+            lineDashLengths: [10,30] })
+            countr = countr+1
+            prevdate = val[0]
+          }
+         // console.log("Valuess", val)
+          lastx = countr
+          sheetValues[countr] = ({ shadowH:parseFloat(val[4]), shadowL:parseFloat(val[3]), open:parseFloat(val[2]), close:parseFloat(val[5]), date:prevdate, time:val[1]})
+         // console.log("Sheet values",sheetValues);
+          values.push({ x:countr, shadowH:parseFloat(val[4])-parseFloat(val[2]), shadowL:parseFloat(val[3])-parseFloat(val[2]), open:0, close:parseFloat(val[5])-parseFloat(val[2]), marker:'Hey mr dj \n Hiii' })
 
       })
       values.push({
@@ -172,11 +186,13 @@ export default class StockChart extends Component {
 
         var charttemp = {...this.state.chartdata}
         var sheettemp = {...this.state.sheetData}
+        var limitlinetemp = {...this.state.sheetLimitLines}
 
         charttemp[sheetName] = values;
         sheettemp[sheetName] = sheetValues;
+        limitlinetemp[sheetName] = sheetLimitLine;
 
-        this.setState({chartdata: charttemp, sheetData: sheettemp})
+        this.setState({ chartdata: charttemp, sheetData: sheettemp, sheetLimitLines: limitlinetemp });
 
     }
 
@@ -190,7 +206,7 @@ export default class StockChart extends Component {
       let temp = this.state.sheetData[sheetNamehandle][event.nativeEvent.x]
       if(temp != undefined && temp != {})
       {
-      this.setState({selectedCandleValues:{x:event.nativeEvent.x, open: temp.open, close: temp.close, high:temp.shadowH, low:temp.shadowL}, CandleModal:true})
+      this.setState({selectedCandleValues:{x:temp.time, open: temp.open, close: temp.close, high:temp.shadowH, low:temp.shadowL, date:temp.date}, CandleModal:true})
     }
   }
 
@@ -198,12 +214,20 @@ export default class StockChart extends Component {
       this.setState({CandleModal:true})
     }
     closeCandleModal(visible){
-      this.setState({CandleModal:visible,selectedCandleValues:{x:'',open:'',close:'',high:'',low:''}})
+      this.setState({CandleModal:visible,selectedCandleValues:{x:'',open:'',close:'',high:'',low:'', date:''}})
+    }
+
+    showTime(statevalues) {
+      console.log(statevalues)
+        if(statevalues.x!='')
+        {
+          return (<Text style={{fontSize:18, color:'#fff'}}>  Time: {statevalues.x}</Text>)
+        }
     }
 
     ShowCandleValues(){
       var statevalues = this.state.selectedCandleValues
-
+      console.log(this.state.selectedCandleValues)
       return(
         <View style={{flex:1,justifyContent: 'center' ,alignItems: 'center'}}>
       <Modal
@@ -213,8 +237,10 @@ export default class StockChart extends Component {
             onRequestClose={ () => { this.closeCandleModal(!this.state.CandleModal)} } >
       <View style={{justifyContent: 'center' ,alignItems: 'center',width:'100%',height:'100%', alignSelf:'center',}}>
         <View style={{justifyContent: 'center' ,alignItems: 'center', width:'80%', height:'35%'}}>
-        <View style={{backgroundColor:'#b71c1c', width:'100%', height:'17%',borderTopLeftRadius:25, borderTopRightRadius:25, alignItems:'center', justifyContent:'center' }}>
-          <Text style={{fontSize:18, color:'#fff'}}>{statevalues.x}</Text>
+        <View style={{backgroundColor:'#b71c1c', width:'100%',flexDirection:'row', height:'17%',borderTopLeftRadius:25, borderTopRightRadius:25, alignItems:'center', justifyContent:'center' }}>
+          <Text style={{fontSize:18, color:'#fff'}}>Date: {statevalues.date}</Text>
+          { this.showTime(statevalues) }
+          
         </View>
 
         <View style={{backgroundColor:'#b71c1c7f', width:'100%', height:'64%', alignItems:'center', justifyContent:'center'}}>
@@ -236,7 +262,7 @@ export default class StockChart extends Component {
 
     showStatusModal(sheetname){
       firebase.database().ref('status/'+sheetname+'/').on('value',(val)=>{
-        console.log(val.val())
+        //console.log(val.val())
         if(sheetname=='BankNiftyH')
         {
         this.setState({statusModal:true, sheet1status:val.val(), currentsheetStatus:'BankNiftyH'})
@@ -258,7 +284,7 @@ export default class StockChart extends Component {
 
     ShowStatusValues(){
       var sheetstatus = {}
-      console.log(this.state.sheet2status)
+      //console.log(this.state.sheet2status)
       if(this.state.currentsheetStatus=='BankNiftyH')
       {
         sheetstatus = this.state.sheet1status
@@ -277,7 +303,6 @@ export default class StockChart extends Component {
       <Modal
             visible={this.state.statusModal}
             transparent={true}
-
             swipeToClose = {false}
             swipeArea={0}
             animationType={"fade"}
@@ -293,7 +318,7 @@ export default class StockChart extends Component {
           {
             Object.keys(sheetstatus).map(time => {
               //console.log(chaps, this.state.subjects[this.state.modal.noti][this.state.modal.mod][chaps].url)
-              return (<Text style={{color:'#000', padding:10}}>{time}:{sheetstatus[time]}</Text> )     
+              return (<Text style={{color:'#000', padding:10, fontSize:18}}>{time}  :  {sheetstatus[time]}</Text> )     
           })
         } 
         </ScrollView>
@@ -312,7 +337,7 @@ export default class StockChart extends Component {
 
 
     render() {
-
+        console.log("LimitLines", this.state.sheet1LimitLines)
         return (
             <View style={{flex: 1}}>
             {this.ShowCandleValues()}
@@ -324,24 +349,50 @@ export default class StockChart extends Component {
                     </TouchableOpacity>
                 </View>
         <ScrollView style={{ width:'100%', height:'100%',backgroundColor:'#FCF5FF'}}>
-
+        <View style={{width:'100%', height:3, backgroundColor:'#fff'}}>
+          <Text style={{alignSelf:'center', color:'#fff', fontSize:18, backgroundColor:'#fff'}}>NaturalGas</Text>
+          </View>
+        <View style={{width:'100%', height:30, backgroundColor:'#b71c1c'}}>
+          <Text style={{alignSelf:'center', color:'#fff', fontSize:18, backgroundColor:'#b71c1c'}}>BankNifty</Text>
+          </View>
         <View style={{width:'100%',height:300, marginTop:4}}>
         <CandleStickChart style={{width:'100%', height:'80%'}}
             chartBackgroundColor={0}
             chartDescription={{text:"Tap a candle to view"}}
-
-            xAxis={{drawLabels: true,
+            xAxis={{ 
+              drawLabels: true,
               drawGridLines: false,
               drawAxisLine: false,
-              gridLineWidth:false}}
+              gridLineWidth: false,
+              valueFormatter: ['date'],
+              limitLines: this.state.sheetLimitLines['BankNiftyH']
+                  }}
+              
+              yAxis={{
+                  left: {
+                    enabled: false
+                  },
+                  right: {
+                    enabled: false
+                  },
+    
+                }
+              }
+
+              marker={{
+                enabled: false,
+                markerColor: processColor('#2c3e50'),
+                textColor: processColor('white'),
+              }}
 
             zoom={{
-              scaleX: 2,
+              scaleX: 1,
               scaleY: 0,
               xValue: 100,
               yValue: 0,
               axisDependency: 'LEFT'
               }}
+              
             data= {{
             dataSets: [
                 {
@@ -374,17 +425,41 @@ export default class StockChart extends Component {
           <Text style={{padding:10, backgroundColor:'#b71c1c',borderRadius:10, color:'#fff'}}>Check Status</Text>
           </TouchableOpacity>
           </View>
-
-          <View style={{width:'100%',height:300}}>
+        
+          <View style={{width:'100%', height:30, backgroundColor:'#b71c1c'}}>
+          <Text style={{alignSelf:'center', color:'#fff', fontSize:18, backgroundColor:'#b71c1c'}}>CrudeOil</Text>
+          </View>
+        <View style={{width:'100%',height:300}}>
         <CandleStickChart style={{width:'100%', height:'80%'}}
             chartBackgroundColor={2}
-            xAxis={{drawLabels: true,
+            xAxis={{ 
+              drawLabels: true,
               drawGridLines: false,
               drawAxisLine: false,
-              gridLineWidth:false}}
+              gridLineWidth: false,
+              valueFormatter: ['date'],
+              limitLines: this.state.sheetLimitLines['CrudeOilH']
+                  }}
+              
+              yAxis={{
+                  left: {
+                    enabled: false
+                  },
+                  right: {
+                    enabled: false
+                  },
+    
+                }
+              }
+
+              marker={{
+                enabled: false,
+                markerColor: processColor('#2c3e50'),
+                textColor: processColor('white'),
+              }}
             chartDescription={{text:"Tap a candle to view"}}
             zoom={{
-              scaleX: 2,
+              scaleX: 1,
               scaleY: 0,
               xValue: 100,
               yValue: 0,
@@ -421,16 +496,41 @@ export default class StockChart extends Component {
           </TouchableOpacity>
           </View>
 
+          <View style={{width:'100%', height:30, backgroundColor:'#b71c1c'}}>
+          <Text style={{alignSelf:'center', color:'#fff', fontSize:18, backgroundColor:'#b71c1c'}}>NaturalGas</Text>
+          </View>
           <View style={{width:'100%',height:300}}>
         <CandleStickChart style={{width:'100%', height:'80%'}}
             chartBackgroundColor={2}
-            xAxis={{drawLabels: true,
+            xAxis={{ 
+              drawLabels: true,
               drawGridLines: false,
               drawAxisLine: false,
-              gridLineWidth:false}}
+              gridLineWidth: false,
+              valueFormatter: ['date'],
+              limitLines: this.state.sheetLimitLines['NaturalGasH']
+                  }}
+              
+              yAxis={{
+                  left: {
+                    enabled: false
+                  },
+                  right: {
+                    enabled: false
+                  },
+    
+                }
+              }
+
+              marker={{
+                enabled: false,
+                markerColor: processColor('#2c3e50'),
+                textColor: processColor('white'),
+              }}
+
             chartDescription={{text:"Tap a candle to view"}}
             zoom={{
-              scaleX: 2,
+              scaleX: 1,
               scaleY: 0,
               xValue: 100,
               yValue: 0,
@@ -466,6 +566,8 @@ export default class StockChart extends Component {
           </TouchableOpacity>
           </View>
 
+
+          
         </ScrollView>
       </View>
         );
