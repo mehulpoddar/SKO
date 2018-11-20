@@ -278,11 +278,11 @@ export default class StockChart extends Component {
 
         </View>
 
-        <View style={{backgroundColor:'#b71c1c7f', width:'100%', height:'64%', alignItems:'center', justifyContent:'center'}}>
-        <Text style={{color:'#fff', marginBottom:5, fontSize:18}}>Open  : {statevalues.open}</Text>
-        <Text style={{color:'#fff', marginBottom:5, fontSize:18}}>Close : {statevalues.close}</Text>
-        <Text style={{color:'#fff', marginBottom:5, fontSize:18}}>High  : {statevalues.high}</Text>
-        <Text style={{color:'#fff', marginBottom:5, fontSize:18}}>Low   : {statevalues.low}</Text>
+        <View style={{backgroundColor:'#ffeded', width:'100%', height:'64%', alignItems:'center', justifyContent:'center'}}>
+        <Text style={{color:'#000', marginBottom:5, fontSize:18}}>Open  : {statevalues.open}</Text>
+        <Text style={{color:'#000', marginBottom:5, fontSize:18}}>Close : {statevalues.close}</Text>
+        <Text style={{color:'#000', marginBottom:5, fontSize:18}}>High  : {statevalues.high}</Text>
+        <Text style={{color:'#000', marginBottom:5, fontSize:18}}>Low   : {statevalues.low}</Text>
         </View>
 
         <TouchableOpacity onPress={this.closeCandleModal.bind(this,false)} style={{backgroundColor:'#b71c1c', width:'100%', height:'17%',justifyContent:'center',borderBottomLeftRadius:25, borderBottomRightRadius:25, alignItems:'center' }}>
