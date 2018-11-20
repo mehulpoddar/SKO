@@ -366,7 +366,7 @@ export default class StockChart extends Component {
         <View style={{width:'100%',height:300, marginTop:4}}>
         <CandleStickChart style={{width:'100%', height:'80%'}}
             chartBackgroundColor={0}
-            chartDescription={{text:"Tap a candle to view"}}
+            chartDescription={{text:"Double Tap a candle to view"}}
             xAxis={{
               drawLabels: true,
               drawGridLines: false,
@@ -465,7 +465,7 @@ export default class StockChart extends Component {
                 markerColor: processColor('#2c3e50'),
                 textColor: processColor('white'),
               }}
-            chartDescription={{text:"Tap a candle to view"}}
+            chartDescription={{text:"Double Tap a candle to view"}}
             zoom={{
               scaleX: 1,
               scaleY: 0,
@@ -536,7 +536,7 @@ export default class StockChart extends Component {
                 textColor: processColor('white'),
               }}
 
-            chartDescription={{text:"Tap a candle to view"}}
+            chartDescription={{text:"Double Tap a candle to view"}}
             zoom={{
               scaleX: 1,
               scaleY: 0,
