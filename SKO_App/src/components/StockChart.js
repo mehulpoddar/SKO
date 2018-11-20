@@ -15,13 +15,20 @@ import firebase from 'firebase';
 var handleDo = true;
 var tempData = {};
 var sheetNamehandle = '';
+var pressedCandle = -1;
 
 export default class StockChart extends Component {
     static navigationOptions = {
         headerMode: 'none'
       }
 
-    state = {chartdata:{
+    state = {
+      status: {
+        BankNiftyH: [],
+        CrudeOilH: [],
+        NaturalGasH: []
+      },
+      chartdata:{
       BankNiftyH: [
         {
         x: 20,
@@ -91,7 +98,7 @@ export default class StockChart extends Component {
           close: 0, // required
         }
     ]},
-    CandleModal:false,statusModal:false,sheet1status:{},sheet2status:{},sheet3status:{},currentsheetStatus:'',
+    CandleModal:false,statusModal:false,
     sheetLimitLines:{BankNiftyH:[], CrudeOilH:[], NaturalGasH:[]},
     selectedCandleValues:{x:'',open:'',close:'',high:'',low:'', date:''},
     sheetData:{BankNiftyH:{}, CrudeOilH:{}, NaturalGasH:{}}
@@ -125,10 +132,12 @@ export default class StockChart extends Component {
       var values = []
       var sheetValues = {}
       var sheetLimitLine = []
+      var checkStat = []
       var xdiff = 1
       var lastx = 0
       var countr = 0
       var prevdate = ''
+      var tempDate = ''
       valuesarray.forEach(
         val=>{
           countr = countr+1
@@ -142,10 +151,21 @@ export default class StockChart extends Component {
           }
          // console.log("Valuess", val)
           lastx = countr
-          sheetValues[countr] = ({ shadowH:parseFloat(val[4]), shadowL:parseFloat(val[3]), open:parseFloat(val[2]), close:parseFloat(val[5]), date:prevdate, time:val[1]})
-         // console.log("Sheet values",sheetValues);
-          values.push({ x:countr, shadowH:parseFloat(val[4])-parseFloat(val[2]), shadowL:parseFloat(val[3])-parseFloat(val[2]), open:0, close:parseFloat(val[5])-parseFloat(val[2]), marker:'Hey mr dj \n Hiii' })
+          
+          if(val.length === 7)
+          {
+            if (val[1] !== "" && val[2] !== "" && val[3] !== "" && val[4] !== "" && val[5] !== "") {
+              if (val[0] !== "") {
+                tempDate = val[0]
+              }
+              sheetValues[countr] = ({ shadowH:parseFloat(val[4]), shadowL:parseFloat(val[3]), open:parseFloat(val[2]), close:parseFloat(val[5]), date:prevdate, time:val[1]})
+          // console.log("Sheet values",sheetValues);
+          
+              values.push({ x:countr, shadowH:parseFloat(val[4])-parseFloat(val[2]), shadowL:parseFloat(val[3])-parseFloat(val[2]), open:0, close:parseFloat(val[5])-parseFloat(val[2]), marker:'Hey mr dj \n Hiii' })
 
+              checkStat.push(tempDate+' '+val[1]+' : '+val[6])
+            }
+          }  
       })
       values.push({
         x: lastx + xdiff,
@@ -187,12 +207,14 @@ export default class StockChart extends Component {
         var charttemp = {...this.state.chartdata}
         var sheettemp = {...this.state.sheetData}
         var limitlinetemp = {...this.state.sheetLimitLines}
+        var stattemp = {...this.state.status}
 
         charttemp[sheetName] = values;
         sheettemp[sheetName] = sheetValues;
         limitlinetemp[sheetName] = sheetLimitLine;
+        stattemp[sheetName] = checkStat;
 
-        this.setState({ chartdata: charttemp, sheetData: sheettemp, sheetLimitLines: limitlinetemp });
+        this.setState({ chartdata: charttemp, sheetData: sheettemp, sheetLimitLines: limitlinetemp, status: stattemp });
 
     }
 
@@ -203,6 +225,15 @@ export default class StockChart extends Component {
     }
 
     handleSelect(event) {
+
+      console.log(event.nativeEvent.x, "asdad", pressedCandle);
+      if (pressedCandle !== event.nativeEvent.x) {
+        if(event.nativeEvent.x != undefined)
+        {
+          pressedCandle = event.nativeEvent.x;
+        }
+        return;
+      }
       let temp = this.state.sheetData[sheetNamehandle][event.nativeEvent.x]
       if(temp != undefined && temp != {})
       {
@@ -261,22 +292,7 @@ export default class StockChart extends Component {
     }
 
     showStatusModal(sheetname){
-      firebase.database().ref('status/'+sheetname+'/').on('value',(val)=>{
-        //console.log(val.val())
-        if(sheetname=='BankNiftyH')
-        {
-        this.setState({statusModal:true, sheet1status:val.val(), currentsheetStatus:'BankNiftyH'})
-        }
-        else if(sheetname=='CrudeOilH')
-        {
-          this.setState({statusModal:true, sheet2status:val.val(), currentsheetStatus:'CrudeOilH'})
-        }
-        else
-        {
-          this.setState({statusModal:true, sheet3status:val.val(), currentsheetStatus:'NaturalGasH'})
-        }
-      })
-      
+      this.setState({statusModal:true, currentsheetStatus:'BankNiftyH'})   
     }
     closeStatusModal(visible){
       this.setState({statusModal:visible})
@@ -316,9 +332,9 @@ export default class StockChart extends Component {
 
         <ScrollView style={{width:'100%', height:'100%',backgroundColor:'#fff'}} contentContainerStyle={{alignItems:'center'}}>
           {
-            Object.keys(sheetstatus).map(time => {
+            this.state.status[this.state.currentsheetStatus].map(str => {
               //console.log(chaps, this.state.subjects[this.state.modal.noti][this.state.modal.mod][chaps].url)
-              return (<Text style={{color:'#000', padding:10, fontSize:18}}>{time}  :  {sheetstatus[time]}</Text> )     
+              return (<Text style={{color:'#000', padding:10, fontSize:18}}>{str}</Text> )     
           })
         } 
         </ScrollView>
@@ -421,7 +437,7 @@ export default class StockChart extends Component {
         }
           />
 
-          <TouchableOpacity onPress={this.showStatusModal.bind(this, 'BankNiftyH')} style={{marginBottom:20, height:'20%', alignItems:'center'}}>
+          <TouchableOpacity onPress={() => this.setState({statusModal:true, currentsheetStatus:'BankNiftyH'})} style={{marginBottom:20, height:'20%', alignItems:'center'}}>
           <Text style={{padding:10, backgroundColor:'#b71c1c',borderRadius:10, color:'#fff'}}>Check Status</Text>
           </TouchableOpacity>
           </View>
