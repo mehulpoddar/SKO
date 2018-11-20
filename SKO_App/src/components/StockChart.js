@@ -24,6 +24,7 @@ export default class StockChart extends Component {
 
     state = {
       status: {
+        default: [],
         BankNiftyH: [],
         CrudeOilH: [],
         NaturalGasH: []
@@ -101,7 +102,8 @@ export default class StockChart extends Component {
     CandleModal:false,statusModal:false,
     sheetLimitLines:{BankNiftyH:[], CrudeOilH:[], NaturalGasH:[]},
     selectedCandleValues:{x:'',open:'',close:'',high:'',low:'', date:''},
-    sheetData:{BankNiftyH:{}, CrudeOilH:{}, NaturalGasH:{}}
+    sheetData:{BankNiftyH:{}, CrudeOilH:{}, NaturalGasH:{}},
+    currentsheetStatus: 'default'
   }
 
 
@@ -111,7 +113,7 @@ export default class StockChart extends Component {
       this.spreadsheetData();
     }
 
-    
+
 
     async getData(sheetName){
       let response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1lbK_NC7BTYkNwh--jiUZ8-ETzZMNzqiAuKfv3OMUOwU/values/'+sheetName+'?key=AIzaSyCoxSCbr5KNjS5xmezt09O0PLP3k8aaxGg', {
@@ -141,7 +143,7 @@ export default class StockChart extends Component {
       valuesarray.forEach(
         val=>{
           countr = countr+1
-          
+
           if(val[0]!='')
           {
             sheetLimitLine.push({ limit: countr, label: val[0], lineColor: processColor('black'), lineWidth: 2, lineDashPhase: 2,
@@ -151,21 +153,23 @@ export default class StockChart extends Component {
           }
          // console.log("Valuess", val)
           lastx = countr
-          
-          if(val.length === 7)
+
+          if(val.length > 5)
           {
-            if (val[1] !== "" && val[2] !== "" && val[3] !== "" && val[4] !== "" && val[5] !== "") {
+            if (val[1] !== "" && val[2] !== "" && val[3] !== "" && val[4] !== "" ) {
               if (val[0] !== "") {
                 tempDate = val[0]
               }
               sheetValues[countr] = ({ shadowH:parseFloat(val[4]), shadowL:parseFloat(val[3]), open:parseFloat(val[2]), close:parseFloat(val[5]), date:prevdate, time:val[1]})
           // console.log("Sheet values",sheetValues);
-          
+
               values.push({ x:countr, shadowH:parseFloat(val[4])-parseFloat(val[2]), shadowL:parseFloat(val[3])-parseFloat(val[2]), open:0, close:parseFloat(val[5])-parseFloat(val[2]), marker:'Hey mr dj \n Hiii' })
 
-              checkStat.push(tempDate+' '+val[1]+' : '+val[6])
+              if (val[6] !== undefined) {
+                checkStat.push(tempDate+' '+val[1]+' : '+val[6])
+              }
             }
-          }  
+          }
       })
       values.push({
         x: lastx + xdiff,
@@ -212,7 +216,7 @@ export default class StockChart extends Component {
         charttemp[sheetName] = values;
         sheettemp[sheetName] = sheetValues;
         limitlinetemp[sheetName] = sheetLimitLine;
-        stattemp[sheetName] = checkStat;
+        stattemp[sheetName] = checkStat.reverse();
 
         this.setState({ chartdata: charttemp, sheetData: sheettemp, sheetLimitLines: limitlinetemp, status: stattemp });
 
@@ -271,7 +275,7 @@ export default class StockChart extends Component {
         <View style={{backgroundColor:'#b71c1c', width:'100%',flexDirection:'row', height:'17%',borderTopLeftRadius:25, borderTopRightRadius:25, alignItems:'center', justifyContent:'center' }}>
           <Text style={{fontSize:18, color:'#fff'}}>Date: {statevalues.date}</Text>
           { this.showTime(statevalues) }
-          
+
         </View>
 
         <View style={{backgroundColor:'#b71c1c7f', width:'100%', height:'64%', alignItems:'center', justifyContent:'center'}}>
@@ -292,7 +296,7 @@ export default class StockChart extends Component {
     }
 
     showStatusModal(sheetname){
-      this.setState({statusModal:true, currentsheetStatus:'BankNiftyH'})   
+      this.setState({statusModal:true, currentsheetStatus:'BankNiftyH'})
     }
     closeStatusModal(visible){
       this.setState({statusModal:visible})
@@ -300,20 +304,8 @@ export default class StockChart extends Component {
 
     ShowStatusValues(){
       var sheetstatus = {}
-      //console.log(this.state.sheet2status)
-      if(this.state.currentsheetStatus=='BankNiftyH')
-      {
-        sheetstatus = this.state.sheet1status
-      }
-      else if(this.state.currentsheetStatus=='CrudeOilH')
-      {
-        sheetstatus = this.state.sheet2status
-      }
-      else
-      {
-        sheetstatus = this.state.sheet3status
-      }
-      
+      //console.log(this.state.sheet2status
+
       return(
         <View style={{flex:1,justifyContent: 'center' ,alignItems: 'center'}}>
       <Modal
@@ -324,7 +316,7 @@ export default class StockChart extends Component {
             animationType={"fade"}
             onRequestClose={ () => { this.closeStatusModal(!this.state.statusModal)} } >
       <View style={{justifyContent: 'center' ,alignItems: 'center',width:'100%',height:'100%', alignSelf:'center',}}>
-        
+
       <View style={{justifyContent: 'center' ,alignItems: 'center', width:'80%', height:'35%'}}>
         <View style={{backgroundColor:'#b71c1c', width:'100%', height:'17%',borderTopLeftRadius:25, borderTopRightRadius:25, alignItems:'center', justifyContent:'center' }}>
           <Text style={{fontSize:18, color:'#fff'}}>{this.state.currentsheetStatus}</Text>
@@ -334,11 +326,11 @@ export default class StockChart extends Component {
           {
             this.state.status[this.state.currentsheetStatus].map(str => {
               //console.log(chaps, this.state.subjects[this.state.modal.noti][this.state.modal.mod][chaps].url)
-              return (<Text style={{color:'#000', padding:10, fontSize:18}}>{str}</Text> )     
+              return (<Text style={{color:'#000', padding:10, fontSize:18}}>{str}</Text> )
           })
-        } 
+        }
         </ScrollView>
-        
+
 
         <TouchableOpacity onPress={this.closeStatusModal.bind(this,false)} style={{backgroundColor:'#b71c1c', width:'100%', height:'17%',justifyContent:'center',borderBottomLeftRadius:25, borderBottomRightRadius:25, alignItems:'center' }}>
           <Text style={{fontSize:18, color:'#fff'}}>Close</Text>
@@ -375,7 +367,7 @@ export default class StockChart extends Component {
         <CandleStickChart style={{width:'100%', height:'80%'}}
             chartBackgroundColor={0}
             chartDescription={{text:"Tap a candle to view"}}
-            xAxis={{ 
+            xAxis={{
               drawLabels: true,
               drawGridLines: false,
               drawAxisLine: false,
@@ -383,7 +375,7 @@ export default class StockChart extends Component {
               valueFormatter: ['date'],
               limitLines: this.state.sheetLimitLines['BankNiftyH']
                   }}
-              
+
               yAxis={{
                   left: {
                     enabled: false
@@ -391,7 +383,7 @@ export default class StockChart extends Component {
                   right: {
                     enabled: false
                   },
-    
+
                 }
               }
 
@@ -408,7 +400,7 @@ export default class StockChart extends Component {
               yValue: 0,
               axisDependency: 'LEFT'
               }}
-              
+
             data= {{
             dataSets: [
                 {
@@ -441,14 +433,14 @@ export default class StockChart extends Component {
           <Text style={{padding:10, backgroundColor:'#b71c1c',borderRadius:10, color:'#fff'}}>Check Status</Text>
           </TouchableOpacity>
           </View>
-        
+
           <View style={{width:'100%', height:30, backgroundColor:'#b71c1c'}}>
           <Text style={{alignSelf:'center', color:'#fff', fontSize:18, backgroundColor:'#b71c1c'}}>CrudeOil</Text>
           </View>
         <View style={{width:'100%',height:300}}>
         <CandleStickChart style={{width:'100%', height:'80%'}}
             chartBackgroundColor={2}
-            xAxis={{ 
+            xAxis={{
               drawLabels: true,
               drawGridLines: false,
               drawAxisLine: false,
@@ -456,7 +448,7 @@ export default class StockChart extends Component {
               valueFormatter: ['date'],
               limitLines: this.state.sheetLimitLines['CrudeOilH']
                   }}
-              
+
               yAxis={{
                   left: {
                     enabled: false
@@ -464,7 +456,7 @@ export default class StockChart extends Component {
                   right: {
                     enabled: false
                   },
-    
+
                 }
               }
 
@@ -507,7 +499,7 @@ export default class StockChart extends Component {
           this.handleSelect(event)}
         }
           />
-          <TouchableOpacity onPress={this.showStatusModal.bind(this, 'CrudeOilH')} style={{marginBottom:20, height:'20%', alignItems:'center'}}>
+          <TouchableOpacity onPress={() => this.setState({statusModal:true, currentsheetStatus:'CrudeOilH'})} style={{marginBottom:20, height:'20%', alignItems:'center'}}>
           <Text style={{padding:10, backgroundColor:'#b71c1c',borderRadius:10, color:'#fff'}}>Check Status</Text>
           </TouchableOpacity>
           </View>
@@ -518,7 +510,7 @@ export default class StockChart extends Component {
           <View style={{width:'100%',height:300}}>
         <CandleStickChart style={{width:'100%', height:'80%'}}
             chartBackgroundColor={2}
-            xAxis={{ 
+            xAxis={{
               drawLabels: true,
               drawGridLines: false,
               drawAxisLine: false,
@@ -526,7 +518,7 @@ export default class StockChart extends Component {
               valueFormatter: ['date'],
               limitLines: this.state.sheetLimitLines['NaturalGasH']
                   }}
-              
+
               yAxis={{
                   left: {
                     enabled: false
@@ -534,7 +526,7 @@ export default class StockChart extends Component {
                   right: {
                     enabled: false
                   },
-    
+
                 }
               }
 
@@ -577,13 +569,13 @@ export default class StockChart extends Component {
           this.handleSelect(event)}
         }
           />
-          <TouchableOpacity onPress={this.showStatusModal.bind(this, 'NaturalGasH')} style={{marginBottom:20, height:'20%', alignItems:'center'}}>
+          <TouchableOpacity onPress={() => this.setState({statusModal:true, currentsheetStatus:'NaturalGasH'})} style={{marginBottom:20, height:'20%', alignItems:'center'}}>
           <Text style={{padding:10, backgroundColor:'#b71c1c',borderRadius:10, color:'#fff'}}>Check Status</Text>
           </TouchableOpacity>
           </View>
 
 
-          
+
         </ScrollView>
       </View>
         );
