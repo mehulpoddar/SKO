@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 
 export default class Subscription extends Component {
 
@@ -13,10 +13,6 @@ export default class Subscription extends Component {
 
                 <View style={{top:0,left:0,right:0, height:50, backgroundColor:'#B71C1C', alignItems:'center', justifyContent:'center'}}>
                     <Text style={{color:'#fff', fontSize:18}}>Subscription</Text>
-                </View>
-
-                <View style={{backgroundColor:'#272727', height:40, alignItems:'center', justifyContent:'center'}}>
-                    <Text style={{color:'#fff', fontSize:16}}>Your current Subscription ends on:</Text>
                 </View>
 
                 <ScrollView style={{ width:'100%', height:'100%',backgroundColor:'#fff'}}>
@@ -33,9 +29,9 @@ export default class Subscription extends Component {
                             six min in intervals starting from 10am untill 3pm only on all trading
                             days.</Text>
                         </View>
-                        <TouchableOpacity  style={{width:'100%', height:'20%', backgroundColor:'#272727', alignSelf:'center', justifyContent:'center',bottom:0, position:'absolute', alignItems:'center'}}>
-                            <Text style={{fontSize:16, color:'#fff'}}>Subscribe - Rs.10,000</Text>
-                        </TouchableOpacity>
+                        <View  style={{width:'100%', height:'20%', backgroundColor:'#272727', alignSelf:'center', justifyContent:'center',bottom:0, position:'absolute', alignItems:'center'}}>
+                            <Text style={{fontSize:16, color:'#fff'}}>Amount - Rs.10,000</Text>
+                        </View>
                     </View>
 
                     <View style={{width:'80%', height:200, backgroundColor:'#fff', alignSelf:'center', marginTop:20}}>
@@ -48,9 +44,9 @@ export default class Subscription extends Component {
                             trading days.
                             </Text>
                         </View>
-                        <TouchableOpacity  style={{width:'100%', height:'20%', backgroundColor:'#272727', alignSelf:'center', justifyContent:'center',bottom:0, position:'absolute', alignItems:'center'}}>
-                            <Text style={{fontSize:16, color:'#fff'}}>Subscribe - Rs.10,000</Text>
-                        </TouchableOpacity>
+                        <View  style={{width:'100%', height:'20%', backgroundColor:'#272727', alignSelf:'center', justifyContent:'center',bottom:0, position:'absolute', alignItems:'center'}}>
+                            <Text style={{fontSize:16, color:'#fff'}}>Amount - Rs.10,000</Text>
+                        </View>
                     </View>
 
                     <View style={{width:'80%', height:200, backgroundColor:'#fff', alignSelf:'center', marginTop:20, marginBottom:20}}>
@@ -65,9 +61,9 @@ export default class Subscription extends Component {
 
                             <Text style={{marginTop:5}}>This is a monthly contract which includes MCX Crude Oil and Natural Gas</Text>
                         </View>
-                        <TouchableOpacity  style={{width:'100%', height:'20%', backgroundColor:'#272727', alignSelf:'center', justifyContent:'center',bottom:0, position:'absolute', alignItems:'center'}}>
-                            <Text style={{fontSize:16, color:'#fff'}}>Subscribe - Rs.10,000</Text>
-                        </TouchableOpacity>
+                        <View style={{width:'100%', height:'20%', backgroundColor:'#272727', alignSelf:'center', justifyContent:'center',bottom:0, position:'absolute', alignItems:'center'}}>
+                            <Text style={{fontSize:16, color:'#fff'}}>Amount - Rs.10,000</Text>
+                        </View>
                     </View>
                 </ScrollView>
             </View>
