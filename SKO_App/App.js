@@ -58,7 +58,7 @@ export default class App extends Component {
 
   }
 
-  
+
 
   componentDidMount(){
     NetInfo.getConnectionInfo().then((connectionInfo) => {
@@ -95,13 +95,13 @@ export default class App extends Component {
 
 
   }
-  
+
 
   componentWillUnmount() {
     OneSignal.removeEventListener('received', this.onReceived);
     OneSignal.removeEventListener('opened', this.onOpened);
     OneSignal.removeEventListener('ids', this.onIds);
-    
+
   }
 
 
@@ -133,7 +133,7 @@ export default class App extends Component {
     return (
       <View style={{flex:1}}>
         <Splash />
-      </View> 
+      </View>
     )
   }
 }
