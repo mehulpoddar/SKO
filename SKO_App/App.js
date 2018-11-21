@@ -36,10 +36,16 @@ export default class App extends Component {
 
   componentWillMount(){
 
-    OneSignal.init("391cef7d-0a95-4665-8c33-92aafef044a5");
-    OneSignal.addEventListener('received', this.onReceived);
-    OneSignal.addEventListener('opened', this.onOpened);
-    OneSignal.addEventListener('ids', this.onIds);
+    firebase.database().ref(`users/$(firebase.auth().currentUser.uid)/subscribed`)
+    .on('value', sub =>
+    {
+      if (sub.val() === 'yes') {
+        OneSignal.init("391cef7d-0a95-4665-8c33-92aafef044a5");
+        OneSignal.addEventListener('received', this.onReceived);
+        OneSignal.addEventListener('opened', this.onOpened);
+        OneSignal.addEventListener('ids', this.onIds);
+      }
+    })
 
     // Initialize Firebase
     if (!firebase.apps.length) {
