@@ -7,6 +7,7 @@ import { AppRegistry,
     processColor,
     ScrollView,
     TouchableOpacity,
+    ActivityIndicator,
     Modal
 } from 'react-native';
 import { CandleStickChart } from 'react-native-charts-wrapper';
@@ -22,6 +23,7 @@ export default class StockChart extends Component {
       }
 
     state = {
+      subscribed:'none',
       status: {
         default: [],
         BankNiftyH: [],
@@ -106,6 +108,13 @@ export default class StockChart extends Component {
   }
 
 
+    componentWillMount(){
+
+      firebase.database().ref(`users/${firebase.auth().currentUser.uid}/subscribed`).on('value', (snap)=>{
+        console.log("subscribed",snap.val());
+        this.setState({subscribed:snap.val()})
+      })
+    }
 
     componentDidMount(){
       //console.log("Hello");
@@ -365,26 +374,15 @@ export default class StockChart extends Component {
     }
 
 
+    checkSubscribtion(){
 
-    render() {
-        console.log("LimitLines", this.state.sheet1LimitLines)
-        return (
-            <View style={{flex: 1}}>
-            {this.ShowCandleValues()}
-            {this.ShowStatusValues()}
-            <View style={{top:0,left:0,right:0, height:50, backgroundColor:'#B71C1C', alignItems:'center', justifyContent:'center'}}>
-                    <Text style={{color:'#fff', fontSize:18}}>Charts</Text>
-                    <TouchableOpacity onPress={this.spreadsheetData.bind(this)} style={{width:40, height:40,right:0, position:'absolute', justifyContent:'center' }}>
-                        <Image source={require('../Resources/Images/refresh.png')} style={{width:30,height:30, color:'#fff'}} />
-                    </TouchableOpacity>
-                </View>
-        <View style={{alignItems:'center'}}>
+
+      if(this.state.subscribed === "yes")
+      return(
+        <ScrollView style={{ width:'100%', height:'100%',backgroundColor:'#FCF5FF'}}>
+        <View style={{alignItems:'center', height:30, justifyContent:'center'}}>
         <Text>Double Tap on a Candle to View</Text>
         </View>
-        <ScrollView style={{ width:'100%', height:'100%',backgroundColor:'#FCF5FF'}}>
-        <View style={{width:'100%', height:3, backgroundColor:'#fff'}}>
-          <Text style={{alignSelf:'center', color:'#fff', fontSize:18, backgroundColor:'#fff'}}>NaturalGas</Text>
-          </View>
         <View style={{width:'100%', height:30, backgroundColor:'#b71c1c'}}>
           <Text style={{alignSelf:'center', color:'#fff', fontSize:18, backgroundColor:'#b71c1c'}}>BankNifty</Text>
           </View>
@@ -594,7 +592,7 @@ export default class StockChart extends Component {
           this.handleSelect(event)}
         }
           />
-          <TouchableOpacity onPress={() => this.setState({statusModal:true, currentsheetStatus:'NaturalGasH'})} style={{marginBottom:20, height:'20%', alignItems:'center'}}>
+          <TouchableOpacity onPress={() => this.setState({statusModal:true, currentsheetStatus:'NaturalGasH'})} style={{marginBottom:50, height:'20%', alignItems:'center'}}>
           <Text style={{padding:10, backgroundColor:'#b71c1c',borderRadius:10, color:'#fff'}}>Check Status</Text>
           </TouchableOpacity>
           </View>
@@ -602,6 +600,45 @@ export default class StockChart extends Component {
 
 
         </ScrollView>
+      )
+
+      else if(this.state.subscribed === "no")
+      {
+        return (
+          <View style={{alignItems:'center', justifyContent:'center', width:'100%', height:'100%'}}> 
+            <Text>Please subscribe to view the charts and recieve notification</Text>
+          </View>
+        )
+      }
+      else
+      {
+        return(
+          <View style={{alignItems:'center', justifyContent:'center', width:'100%', height:'100%'}}>
+            <ActivityIndicator size="large" color="#000" />
+          </View>
+        )
+      }
+    }
+
+    
+
+
+
+    render() {
+        console.log("LimitLines", this.state.sheet1LimitLines)
+        return (
+            <View style={{flex: 1}}>
+            {this.ShowCandleValues()}
+            {this.ShowStatusValues()}
+            <View style={{top:0,left:0,right:0, height:50, backgroundColor:'#B71C1C', alignItems:'center', justifyContent:'center'}}>
+                    <Text style={{color:'#fff', fontSize:18}}>Charts</Text>
+                    <TouchableOpacity onPress={this.spreadsheetData.bind(this)} style={{width:40, height:40,right:0, position:'absolute', justifyContent:'center' }}>
+                        <Image source={require('../Resources/Images/refresh.png')} style={{width:30,height:30, color:'#fff'}} />
+                    </TouchableOpacity>
+                </View>
+
+            {this.checkSubscribtion()}
+        
       </View>
         );
     }

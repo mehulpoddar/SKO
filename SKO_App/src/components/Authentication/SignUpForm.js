@@ -30,6 +30,7 @@ export default class SignUpForm extends Component {
                     username: this.state.username,
                     experience: this.state.experience,
                     phone:this.state.phone,
+                    subscribed:'yes'
                    },()=>{
                     this.props.navigation.navigate('HomeNavi', {screen:'StockChart'})
                    })
@@ -116,7 +117,6 @@ export default class SignUpForm extends Component {
                                         marginBottom: 20,
                                         paddingHorizontal: 10}}
                             placeholder="Enter Phone Number"
-                            secureTextEntry
                             onChangeText={phone=>{this.setState({phone:phone})}}
                             value={this.state.phone}
                             autoCorrect={false}

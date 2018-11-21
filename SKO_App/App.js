@@ -16,7 +16,7 @@ import {StackNavi, TabNavi} from './src/components/Root';
 import Splash from './src/components/Authentication/Splash';
 import Sub from './src/components/Subscription';
 
-const version = '2.0.0';
+const version = '1.0.3';
 
 
 export default class App extends Component {
@@ -36,11 +36,8 @@ export default class App extends Component {
 
   componentWillMount(){
 
-    OneSignal.init("391cef7d-0a95-4665-8c33-92aafef044a5");
-    OneSignal.addEventListener('received', this.onReceived);
-    OneSignal.addEventListener('opened', this.onOpened);
-    OneSignal.addEventListener('ids', this.onIds);
-
+    
+    
     // Initialize Firebase
     if (!firebase.apps.length) {
       const config = {
@@ -54,6 +51,7 @@ export default class App extends Component {
       firebase.initializeApp(config);
     }
 
+    
 
 
   }
@@ -80,6 +78,16 @@ export default class App extends Component {
         this.setState({ allow: true },()=>{
           firebase.auth().onAuthStateChanged(user => {
             if (user) {
+              firebase.database().ref(`users/${firebase.auth().currentUser.uid}/subscribed`).on('value',(snap)=>{
+                if(snap.val()==="yes")
+              {
+              OneSignal.init("391cef7d-0a95-4665-8c33-92aafef044a5");
+              OneSignal.addEventListener('received', this.onReceived);
+              OneSignal.addEventListener('opened', this.onOpened);
+              OneSignal.addEventListener('ids', this.onIds);
+              }
+          
+              })
                 this.setState({ loggedIn: true });
             } else {
               this.setState({ loggedIn: false });
