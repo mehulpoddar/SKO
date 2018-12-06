@@ -372,246 +372,135 @@ export default class StockChart extends Component {
       )
     }
 
+    chartGenerator(chartName) {
+      return (
+        <View style={{ flex: 1 }}>
+          <View style={{width:'100%', height:30, backgroundColor:'#b71c1c'}}>
+            <Text style={{alignSelf:'center', color:'#fff', fontSize:18, backgroundColor:'#b71c1c'}}>{chartName}</Text>
+            </View>
+          <View style={{width:'100%',height:300, marginTop:4}}>
+          <CandleStickChart style={{width:'100%', height:'80%'}}
+              chartBackgroundColor={0}
+              chartDescription={{text:""}}
+              xAxis={{
+                drawLabels: true,
+                drawGridLines: false,
+                drawAxisLine: false,
+                gridLineWidth: false,
+                valueFormatter: ['date'],
+                limitLines: this.state.sheetLimitLines[chartName+'H']
+                    }}
+
+                yAxis={{
+                    left: {
+                      enabled: false
+                    },
+                    right: {
+                      enabled: false
+                    },
+
+                  }
+                }
+
+                marker={{
+                  enabled: false,
+                  markerColor: processColor('#2c3e50'),
+                  textColor: processColor('white'),
+                }}
+
+              zoom={{
+                scaleX: 2,
+                scaleY: 0,
+                xValue: 100,
+                yValue: 0,
+                axisDependency: 'LEFT'
+                }}
+
+              data= {{
+              dataSets: [
+                  {
+                    values: this.state.chartdata[chartName+'H'],
+                    label: chartName, // required
+                    config: {
+                      drawValues: false,
+                      highlightColor: processColor('black'),
+                      drawHighlightIndicators: true,
+                      shadowColor: processColor('black'),
+                      shadowWidth: 1,
+                      shadowColorSameAsCandle: true,
+                      neutralColor: processColor('pink'),
+                      increasingColor: processColor('#71BD6A'),
+                      increasingPaintStyle: 'FILL',
+                      decreasingColor: processColor('#D14B5A')
+                    }
+                  }]
+
+             }
+          }
+
+          onSelect={(event)=>{
+            sheetNamehandle=chartName+'H';
+            this.handleSelect(event)}
+          }
+            />
+
+            <TouchableOpacity onPress={() => this.setState({statusModal:true, currentsheetStatus:chartName+'H'})} style={{marginBottom:20, height:'20%', alignItems:'center'}}>
+            <Text style={{padding:10, backgroundColor:'#b71c1c',borderRadius:10, color:'#fff'}}>Check Status</Text>
+            </TouchableOpacity>
+            </View>
+          </View>
+        );
+    }
+
+    chartChooser(chartName) {
+      if (chartName === 'BankNiftyH' && this.state.subscribed.hourly_nse === 'yes')
+        return (this.chartGenerator('BankNifty'));
+      else if (chartName === 'CrudeOilH' && this.state.subscribed.hourly_mcx === 'yes')
+        return (this.chartGenerator('CrudeOil'));
+      else if (chartName === 'NaturalGasH' && this.state.subscribed.hourly_mcx === 'yes')
+        return (this.chartGenerator('NaturalGas'));
+      else if (chartName === 'BankNiftyD' && this.state.subscribed.daily_nse === 'yes')
+        return (this.chartGenerator('BankNifty'));
+      else if (chartName === 'CrudeOilD' && this.state.subscribed.daily_mcx === 'yes')
+        return (this.chartGenerator('CrudeOil'));
+      else if (chartName === 'NaturalGasD' && this.state.subscribed.daily_mcx === 'yes')
+        return (this.chartGenerator('NaturalGas'));
+      return (
+        <View style={{alignItems:'center', justifyContent:'center', width:'100%', height:'100%'}}>
+          <Text>Please subscribe to view the charts and recieve notification</Text>
+        </View>
+      );
+    }
 
     checkSubscribtion(){
 
-
-      if(this.state.subscribed.hourly_nse === 'yes' ||
-         this.state.subscribed.hourly_mcx === 'yes' ||
-         this.state.subscribed.daily_nse === 'yes' ||
-         this.state.subscribed.daily_mcx === 'yes')
-      return(
-        <ScrollView style={{ width:'100%', height:'100%',backgroundColor:'#FCF5FF'}} onScrollBeginDrag={()=>{scrolling=true}} onScrollEndDrag={()=>{scrolling=false}}>
-        <View style={{alignItems:'center', height:30, justifyContent:'center'}}>
-        <Text>Tap on a Candle to View</Text>
-        </View>
-        <View style={{width:'100%', height:30, backgroundColor:'#b71c1c'}}>
-          <Text style={{alignSelf:'center', color:'#fff', fontSize:18, backgroundColor:'#b71c1c'}}>BankNifty</Text>
-          </View>
-        <View style={{width:'100%',height:300, marginTop:4}}>
-        <CandleStickChart style={{width:'100%', height:'80%'}}
-            chartBackgroundColor={0}
-            chartDescription={{text:""}}
-            xAxis={{
-              drawLabels: true,
-              drawGridLines: false,
-              drawAxisLine: false,
-              gridLineWidth: false,
-              valueFormatter: ['date'],
-              limitLines: this.state.sheetLimitLines['BankNiftyH']
-                  }}
-
-              yAxis={{
-                  left: {
-                    enabled: false
-                  },
-                  right: {
-                    enabled: false
-                  },
-
-                }
-              }
-
-              marker={{
-                enabled: false,
-                markerColor: processColor('#2c3e50'),
-                textColor: processColor('white'),
-              }}
-
-            zoom={{
-              scaleX: 2,
-              scaleY: 0,
-              xValue: 100,
-              yValue: 0,
-              axisDependency: 'LEFT'
-              }}
-
-            data= {{
-            dataSets: [
-                {
-                  values: this.state.chartdata.BankNiftyH,
-                  label: 'BankNifty', // required
-                  config: {
-                    drawValues: false,
-                    highlightColor: processColor('black'),
-                    drawHighlightIndicators: true,
-                    shadowColor: processColor('black'),
-                    shadowWidth: 1,
-                    shadowColorSameAsCandle: true,
-                    neutralColor: processColor('pink'),
-                    increasingColor: processColor('#71BD6A'),
-                    increasingPaintStyle: 'FILL',
-                    decreasingColor: processColor('#D14B5A')
-                  }
-                }]
-
+      if (this.state.subscribed.hourly_nse === 'no' &&
+         this.state.subscribed.hourly_mcx === 'no' &&
+         this.state.subscribed.daily_nse === 'no' &&
+         this.state.subscribed.daily_mcx === 'no')
+         {
+           return (
+             <View style={{alignItems:'center', justifyContent:'center', width:'100%', height:'100%'}}>
+               <Text>Please subscribe to view the charts and recieve notification</Text>
+             </View>
+           )
+         }
+        else if(this.state.subscribed.hourly_nse === 'yes' ||
+           this.state.subscribed.hourly_mcx === 'yes' ||
+           this.state.subscribed.daily_nse === 'yes' ||
+           this.state.subscribed.daily_mcx === 'yes')
+           {
+             return(
+               <ScrollView style={{ width:'100%', height:'100%',backgroundColor:'#FCF5FF'}} onScrollBeginDrag={()=>{scrolling=true}} onScrollEndDrag={()=>{scrolling=false}}>
+               <View style={{alignItems:'center', height:30, justifyContent:'center'}}>
+               <Text>Tap on a Candle to View</Text>
+               </View>
+                {this.chartChooser('BankNiftyH')}
+                {this.chartChooser('CrudeOilH')}
+                {this.chartChooser('NaturalGasH')}
+               </ScrollView>
+             )
            }
-        }
-
-        onSelect={(event)=>{
-          sheetNamehandle='BankNiftyH';
-          this.handleSelect(event)}
-        }
-          />
-
-          <TouchableOpacity onPress={() => this.setState({statusModal:true, currentsheetStatus:'BankNiftyH'})} style={{marginBottom:20, height:'20%', alignItems:'center'}}>
-          <Text style={{padding:10, backgroundColor:'#b71c1c',borderRadius:10, color:'#fff'}}>Check Status</Text>
-          </TouchableOpacity>
-          </View>
-
-          <View style={{width:'100%', height:30, backgroundColor:'#b71c1c'}}>
-          <Text style={{alignSelf:'center', color:'#fff', fontSize:18, backgroundColor:'#b71c1c'}}>CrudeOil</Text>
-          </View>
-        <View style={{width:'100%',height:300}}>
-        <CandleStickChart style={{width:'100%', height:'80%'}}
-            chartBackgroundColor={2}
-            xAxis={{
-              drawLabels: true,
-              drawGridLines: false,
-              drawAxisLine: false,
-              gridLineWidth: false,
-              valueFormatter: ['date'],
-              limitLines: this.state.sheetLimitLines['CrudeOilH']
-                  }}
-
-              yAxis={{
-                  left: {
-                    enabled: false
-                  },
-                  right: {
-                    enabled: false
-                  },
-
-                }
-              }
-
-              marker={{
-                enabled: false,
-                markerColor: processColor('#2c3e50'),
-                textColor: processColor('white'),
-              }}
-            chartDescription={{text:""}}
-            zoom={{
-              scaleX: 2,
-              scaleY: 0,
-              xValue: 100,
-              yValue: 0,
-              axisDependency: 'LEFT'
-              }}
-            data= {{
-            dataSets: [
-                {
-                  values: this.state.chartdata.CrudeOilH,
-                  label: 'CrudeOil', // required
-                  config: {
-                    drawValues: false,
-                    highlightColor: processColor('darkgrey'),
-                    shadowColor: processColor('black'),
-                    shadowWidth: 1,
-                    shadowColorSameAsCandle: true,
-                    neutralColor: processColor('pink'),
-                    increasingColor: processColor('#71BD6A'),
-                    increasingPaintStyle: 'FILL',
-                    decreasingColor: processColor('#D14B5A')
-                  }
-                }]
-
-           }
-        }
-
-        onSelect={(event)=>{
-          sheetNamehandle='CrudeOilH';
-          this.handleSelect(event)}
-        }
-          />
-          <TouchableOpacity onPress={() => this.setState({statusModal:true, currentsheetStatus:'CrudeOilH'})} style={{marginBottom:20, height:'20%', alignItems:'center'}}>
-          <Text style={{padding:10, backgroundColor:'#b71c1c',borderRadius:10, color:'#fff'}}>Check Status</Text>
-          </TouchableOpacity>
-          </View>
-
-          <View style={{width:'100%', height:30, backgroundColor:'#b71c1c'}}>
-          <Text style={{alignSelf:'center', color:'#fff', fontSize:18, backgroundColor:'#b71c1c'}}>NaturalGas</Text>
-          </View>
-          <View style={{width:'100%',height:300}}>
-        <CandleStickChart style={{width:'100%', height:'80%'}}
-            chartBackgroundColor={2}
-            xAxis={{
-              drawLabels: true,
-              drawGridLines: false,
-              drawAxisLine: false,
-              gridLineWidth: false,
-              valueFormatter: ['date'],
-              limitLines: this.state.sheetLimitLines['NaturalGasH']
-                  }}
-
-              yAxis={{
-                  left: {
-                    enabled: false
-                  },
-                  right: {
-                    enabled: false
-                  },
-
-                }
-              }
-
-              marker={{
-                enabled: false,
-                markerColor: processColor('#2c3e50'),
-                textColor: processColor('white'),
-              }}
-
-            chartDescription={{text:""}}
-            zoom={{
-              scaleX: 2,
-              scaleY: 0,
-              xValue: 100,
-              yValue: 0,
-              axisDependency: 'LEFT'
-              }}
-            data= {{
-            dataSets: [
-                {
-                  values: this.state.chartdata.NaturalGasH,
-                  label: 'NaturalGas', // required
-                  config: {
-                    drawValues: false,
-                    highlightColor: processColor('darkgray'),
-                    shadowColor: processColor('black'),
-                    shadowWidth: 1,
-                    shadowColorSameAsCandle: true,
-                    neutralColor: processColor('pink'),
-                    increasingColor: processColor('#71BD6A'),
-                    increasingPaintStyle: 'FILL',
-                    decreasingColor: processColor('#D14B5A')
-                  }
-                }]
-
-           }
-        }
-        onSelect={(event)=>{
-          sheetNamehandle='NaturalGasH';
-          this.handleSelect(event)}
-        }
-          />
-          <TouchableOpacity onPress={() => this.setState({statusModal:true, currentsheetStatus:'NaturalGasH'})} style={{marginBottom:50, height:'20%', alignItems:'center'}}>
-          <Text style={{padding:10, backgroundColor:'#b71c1c',borderRadius:10, color:'#fff'}}>Check Status</Text>
-          </TouchableOpacity>
-          </View>
-
-
-
-        </ScrollView>
-      )
-
-      else if(this.state.subscribed === "no")
-      {
-        return (
-          <View style={{alignItems:'center', justifyContent:'center', width:'100%', height:'100%'}}>
-            <Text>Please subscribe to view the charts and recieve notification</Text>
-          </View>
-        )
-      }
       else
       {
         return(

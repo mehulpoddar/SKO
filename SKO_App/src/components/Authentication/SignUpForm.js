@@ -30,7 +30,13 @@ export default class SignUpForm extends Component {
                     username: this.state.username,
                     experience: this.state.experience,
                     phone:this.state.phone,
-                    subscribed:'yes'
+                    subscribed: {
+                      daily_nse:"no",
+                      daily_mcx:"no",
+                      hourly_nse:"no",
+                      hourly_mcx:"no"
+                    }
+
                    },()=>{
                     this.props.navigation.navigate('HomeNavi', {screen:'StockChart'})
                    })
@@ -41,7 +47,7 @@ export default class SignUpForm extends Component {
           })
         }
 
-        
+
     }
 
         renderSpinnerButton(){
@@ -148,11 +154,11 @@ export default class SignUpForm extends Component {
                             <Picker.Item label="More than 8" value="5" />
                       </Picker>
                       </View>
-                      
+
                         <View style={{width:'80%', height:50, justifyContent:'center',alignItems:'center'}}>
                             {this.renderSpinnerButton()}
                         </View>
-                        
+
                         </View>
                         </KeyboardAwareScrollView>
         );
