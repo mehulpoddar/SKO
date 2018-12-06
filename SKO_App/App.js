@@ -16,7 +16,7 @@ import {StackNavi, TabNavi} from './src/components/Root';
 import Splash from './src/components/Authentication/Splash';
 import Sub from './src/components/Subscription';
 
-const version = '2.0.0';
+const version = '2.0.1';
 
 
 export default class App extends Component {

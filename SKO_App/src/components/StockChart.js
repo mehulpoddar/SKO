@@ -16,6 +16,7 @@ var handleDo = true;
 var tempData = {};
 var sheetNamehandle = '';
 var pressedCandle = -1;
+var scrolling = false;
 
 export default class StockChart extends Component {
     static navigationOptions = {
@@ -176,7 +177,7 @@ export default class StockChart extends Component {
               values.push({ x:countr, shadowH:parseFloat(val[4])-parseFloat(val[2]), shadowL:parseFloat(val[3])-parseFloat(val[2]), open:0, close:parseFloat(val[5])-parseFloat(val[2]) })
 
               if (val[6] !== undefined) {
-                sheetLimitLine.push({ limit: countr, label: val[6][0], valueTextColor: (val[6]=='Buy')?processColor('green'):processColor('red'), lineColor: processColor('darkcyan'), lineWidth: 0.4, labelPosition:'RIGHT_BOTTOM'  })
+                sheetLimitLine.push({ limit: countr, label: val[6][0], valueTextColor: (val[6]=='Buy')?processColor('green'):processColor('red'), lineColor: processColor('darkgrey'), lineWidth: 0.4, labelPosition:'RIGHT_BOTTOM'  })
                 checkStat.push(tempDate+' '+val[1]+' : '+val[6])
               }
             }
@@ -241,19 +242,18 @@ export default class StockChart extends Component {
 
     handleSelect(event) {
 
+      
       console.log(event.nativeEvent.x, "asdad", pressedCandle);
-      if (pressedCandle !== event.nativeEvent.x) {
-        if(event.nativeEvent.x != undefined)
-        {
-          pressedCandle = event.nativeEvent.x;
-        }
-        return;
-      }
+      if(!scrolling)
+      {
+        
       let temp = this.state.sheetData[sheetNamehandle][event.nativeEvent.x]
       if(temp != undefined && temp != {})
       {
       this.setState({selectedCandleValues:{x:temp.time, open: temp.open, close: temp.close, high:temp.shadowH, low:temp.shadowL, date:temp.date, status: temp.status}, CandleModal:true})
     }
+      
+  }
   }
 
     showCandleModal(){
@@ -379,9 +379,9 @@ export default class StockChart extends Component {
 
       if(this.state.subscribed === "yes")
       return(
-        <ScrollView style={{ width:'100%', height:'100%',backgroundColor:'#FCF5FF'}}>
+        <ScrollView style={{ width:'100%', height:'100%',backgroundColor:'#FCF5FF'}} onScrollBeginDrag={()=>{scrolling=true}} onScrollEndDrag={()=>{scrolling=false}}>
         <View style={{alignItems:'center', height:30, justifyContent:'center'}}>
-        <Text>Double Tap on a Candle to View</Text>
+        <Text>Tap on a Candle to View</Text>
         </View>
         <View style={{width:'100%', height:30, backgroundColor:'#b71c1c'}}>
           <Text style={{alignSelf:'center', color:'#fff', fontSize:18, backgroundColor:'#b71c1c'}}>BankNifty</Text>
