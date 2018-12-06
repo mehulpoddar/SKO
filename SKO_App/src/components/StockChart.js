@@ -112,8 +112,7 @@ export default class StockChart extends Component {
     componentWillMount(){
 
       firebase.database().ref(`users/${firebase.auth().currentUser.uid}/subscribed`).on('value', (snap)=>{
-        console.log("subscribed",snap.val());
-        this.setState({subscribed:snap.val()})
+        this.setState({subscribed:snap.val()});
       })
     }
 
@@ -160,7 +159,7 @@ export default class StockChart extends Component {
             lineDashLengths: [10,30] })
             countr = countr+1
             prevdate = val[0]
-            
+
           }
          // console.log("Valuess", val)
           lastx = countr
@@ -242,17 +241,17 @@ export default class StockChart extends Component {
 
     handleSelect(event) {
 
-      
+
       console.log(event.nativeEvent.x, "asdad", pressedCandle);
       if(!scrolling)
       {
-        
+
       let temp = this.state.sheetData[sheetNamehandle][event.nativeEvent.x]
       if(temp != undefined && temp != {})
       {
       this.setState({selectedCandleValues:{x:temp.time, open: temp.open, close: temp.close, high:temp.shadowH, low:temp.shadowL, date:temp.date, status: temp.status}, CandleModal:true})
     }
-      
+
   }
   }
 
@@ -377,7 +376,10 @@ export default class StockChart extends Component {
     checkSubscribtion(){
 
 
-      if(this.state.subscribed === "yes")
+      if(this.state.subscribed.hourly_nse === 'yes' ||
+         this.state.subscribed.hourly_mcx === 'yes' ||
+         this.state.subscribed.daily_nse === 'yes' ||
+         this.state.subscribed.daily_mcx === 'yes')
       return(
         <ScrollView style={{ width:'100%', height:'100%',backgroundColor:'#FCF5FF'}} onScrollBeginDrag={()=>{scrolling=true}} onScrollEndDrag={()=>{scrolling=false}}>
         <View style={{alignItems:'center', height:30, justifyContent:'center'}}>
@@ -605,7 +607,7 @@ export default class StockChart extends Component {
       else if(this.state.subscribed === "no")
       {
         return (
-          <View style={{alignItems:'center', justifyContent:'center', width:'100%', height:'100%'}}> 
+          <View style={{alignItems:'center', justifyContent:'center', width:'100%', height:'100%'}}>
             <Text>Please subscribe to view the charts and recieve notification</Text>
           </View>
         )
@@ -620,7 +622,7 @@ export default class StockChart extends Component {
       }
     }
 
-    
+
 
 
 
@@ -638,7 +640,7 @@ export default class StockChart extends Component {
                 </View>
 
             {this.checkSubscribtion()}
-        
+
       </View>
         );
     }

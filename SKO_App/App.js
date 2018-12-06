@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {View, Alert, NetInfo } from 'react-native';
+import {View, Alert, NetInfo, ToastAndroid } from 'react-native';
 import firebase from 'firebase';
 import OneSignal from 'react-native-onesignal';
 
@@ -36,11 +36,11 @@ export default class App extends Component {
 
   componentWillMount(){
 
-    
     OneSignal.init("391cef7d-0a95-4665-8c33-92aafef044a5");
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
     OneSignal.addEventListener('ids', this.onIds);
+
     // Initialize Firebase
     if (!firebase.apps.length) {
       const config = {
@@ -54,14 +54,14 @@ export default class App extends Component {
       firebase.initializeApp(config);
     }
 
-    
+
 
 
   }
 
 
 
-  componentDidMount(){
+  componentDidMount() {
     NetInfo.getConnectionInfo().then((connectionInfo) => {
       this.setState({
           connectionInfo: connectionInfo.type
@@ -74,8 +74,9 @@ export default class App extends Component {
       this.handleFirstConnectivityChange.bind(this)
     );
 
+
+
     firebase.database().ref('ver_control/cur_ver').on('value',(val)=>{
-      console.log(val.val())
       if(version==val.val())
     {
         this.setState({ allow: true },()=>{
@@ -86,6 +87,11 @@ export default class App extends Component {
               this.setState({ loggedIn: false });
             }
           });
+        });
+        firebase.database().ref(
+          `users/${firebase.auth().currentUser.uid}/subscribed`)
+          .on('value',(subTags)=>{
+          OneSignal.sendTags(subTags.val());
         });
     } else {
         firebase.auth().signOut();
