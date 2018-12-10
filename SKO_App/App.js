@@ -16,7 +16,7 @@ import {StackNavi, TabNavi} from './src/components/Root';
 import Splash from './src/components/Authentication/Splash';
 import Sub from './src/components/Subscription';
 
-const version = '2.0.1';
+const version = '2.0.2';
 
 
 export default class App extends Component {
@@ -82,16 +82,16 @@ export default class App extends Component {
         this.setState({ allow: true },()=>{
           firebase.auth().onAuthStateChanged(user => {
             if (user) {
+              firebase.database().ref(
+                `users/${firebase.auth().currentUser.uid}/subscribed`)
+                .on('value',(subTags)=>{
+                OneSignal.sendTags(subTags.val());
+              });
                 this.setState({ loggedIn: true });
             } else {
               this.setState({ loggedIn: false });
             }
           });
-        });
-        firebase.database().ref(
-          `users/${firebase.auth().currentUser.uid}/subscribed`)
-          .on('value',(subTags)=>{
-          OneSignal.sendTags(subTags.val());
         });
     } else {
         firebase.auth().signOut();

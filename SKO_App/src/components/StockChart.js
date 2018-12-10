@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AppRegistry,
+import { 
     StyleSheet,
     Text,
     Image,
@@ -10,8 +10,9 @@ import { AppRegistry,
     ActivityIndicator,
     Modal
 } from 'react-native';
-import { CandleStickChart } from 'react-native-charts-wrapper';
 import firebase from 'firebase';
+import { CandleStickChart } from 'react-native-charts-wrapper';
+
 var handleDo = true;
 var tempData = {};
 var sheetNamehandle = '';
@@ -112,6 +113,7 @@ export default class StockChart extends Component {
     componentWillMount(){
 
       firebase.database().ref(`users/${firebase.auth().currentUser.uid}/subscribed`).on('value', (snap)=>{
+        console.log(snap.val());
         this.setState({subscribed:snap.val()});
       })
     }
@@ -409,7 +411,7 @@ export default class StockChart extends Component {
                 }}
 
               zoom={{
-                scaleX: 2,
+                scaleX: 4,
                 scaleY: 0,
                 xValue: 100,
                 yValue: 0,
@@ -456,20 +458,18 @@ export default class StockChart extends Component {
       if (chartName === 'BankNiftyH' && this.state.subscribed.hourly_nse === 'yes')
         return (this.chartGenerator('BankNifty'));
       else if (chartName === 'CrudeOilH' && this.state.subscribed.hourly_mcx === 'yes')
-        return (this.chartGenerator('CrudeOil'));
+        {console.log("Crude");
+        return (this.chartGenerator('CrudeOil'));}
       else if (chartName === 'NaturalGasH' && this.state.subscribed.hourly_mcx === 'yes')
-        return (this.chartGenerator('NaturalGas'));
+        {console.log("NAT");
+        return (this.chartGenerator('NaturalGas'));}
       else if (chartName === 'BankNiftyD' && this.state.subscribed.daily_nse === 'yes')
         return (this.chartGenerator('BankNifty'));
       else if (chartName === 'CrudeOilD' && this.state.subscribed.daily_mcx === 'yes')
         return (this.chartGenerator('CrudeOil'));
       else if (chartName === 'NaturalGasD' && this.state.subscribed.daily_mcx === 'yes')
         return (this.chartGenerator('NaturalGas'));
-      return (
-        <View style={{alignItems:'center', justifyContent:'center', width:'100%', height:'100%'}}>
-          <Text>Please subscribe to view the charts and recieve notification</Text>
-        </View>
-      );
+      
     }
 
     checkSubscribtion(){
